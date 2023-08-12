@@ -1,9 +1,9 @@
-module "cs-folders-iam-0-computeinstanceAdminv1" {
+module "folders-iam-0-computeinstanceAdminv1" {
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
   version = "~> 7.4"
 
   folders = [
-    module.cs-envs.ids["Non-Production"],
+    module.envs.ids["Non-Production"],
   ]
   bindings = {
     "roles/compute.instanceAdmin.v1" = [
@@ -12,12 +12,12 @@ module "cs-folders-iam-0-computeinstanceAdminv1" {
   }
 }
 
-module "cs-folders-iam-0-containeradmin" {
+module "folders-iam-0-containeradmin" {
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
   version = "~> 7.4"
 
   folders = [
-    module.cs-envs.ids["Non-Production"],
+    module.envs.ids["Non-Production"],
   ]
   bindings = {
     "roles/container.admin" = [
@@ -26,12 +26,12 @@ module "cs-folders-iam-0-containeradmin" {
   }
 }
 
-module "cs-folders-iam-1-computeinstanceAdminv1" {
+module "folders-iam-1-computeinstanceAdminv1" {
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
   version = "~> 7.4"
 
   folders = [
-    module.cs-envs.ids["Development"],
+    module.envs.ids["Development"],
   ]
   bindings = {
     "roles/compute.instanceAdmin.v1" = [
@@ -40,12 +40,12 @@ module "cs-folders-iam-1-computeinstanceAdminv1" {
   }
 }
 
-module "cs-folders-iam-1-containeradmin" {
+module "folders-iam-1-containeradmin" {
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
   version = "~> 7.4"
 
   folders = [
-    module.cs-envs.ids["Development"],
+    module.envs.ids["Development"],
   ]
   bindings = {
     "roles/container.admin" = [
@@ -54,12 +54,12 @@ module "cs-folders-iam-1-containeradmin" {
   }
 }
 
-module "cs-projects-iam-2-loggingviewer" {
+module "projects-iam-2-loggingviewer" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 7.4"
 
   projects = [
-    module.cs-logging-km289-xm965.project_id,
+    module.logging-km289-xm965.project_id,
   ]
   bindings = {
     "roles/logging.viewer" = [
@@ -68,12 +68,12 @@ module "cs-projects-iam-2-loggingviewer" {
   }
 }
 
-module "cs-projects-iam-2-loggingprivateLogViewer" {
+module "projects-iam-2-loggingprivateLogViewer" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 7.4"
 
   projects = [
-    module.cs-logging-km289-xm965.project_id,
+    module.logging-km289-xm965.project_id,
   ]
   bindings = {
     "roles/logging.privateLogViewer" = [
@@ -82,12 +82,12 @@ module "cs-projects-iam-2-loggingprivateLogViewer" {
   }
 }
 
-module "cs-projects-iam-2-bigquerydataViewer" {
+module "projects-iam-2-bigquerydataViewer" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 7.4"
 
   projects = [
-    module.cs-logging-km289-xm965.project_id,
+    module.logging-km289-xm965.project_id,
   ]
   bindings = {
     "roles/bigquery.dataViewer" = [
@@ -96,12 +96,12 @@ module "cs-projects-iam-2-bigquerydataViewer" {
   }
 }
 
-module "cs-projects-iam-3-bigquerydataViewer" {
+module "projects-iam-3-bigquerydataViewer" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 7.4"
 
   projects = [
-    module.cs-logging-km289-xm965.project_id,
+    module.logging-km289-xm965.project_id,
   ]
   bindings = {
     "roles/bigquery.dataViewer" = [

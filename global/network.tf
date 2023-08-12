@@ -1,9 +1,9 @@
 # VPC and Subnets
-module "cs-vpc-prod-shared" {
+module "vpc-prod-shared" {
   source  = "terraform-google-modules/network/google"
   version = "~> 5.0"
 
-  project_id   = module.cs-vpc-host-prod-km289-xm965.project_id
+  project_id   = module.vpc-host-prod-km289-xm965.project_id
   network_name = "vpc-prod-shared"
 
   subnets = [
@@ -92,11 +92,11 @@ module "cs-vpc-prod-shared" {
 
 
 # VPC and Subnets
-module "cs-vpc-dev-shared" {
+module "vpc-dev-shared" {
   source  = "terraform-google-modules/network/google"
   version = "~> 5.0"
 
-  project_id   = module.cs-vpc-host-nonprod-km289-xm965.project_id
+  project_id   = module.vpc-host-nonprod-km289-xm965.project_id
   network_name = "vpc-dev-shared"
 
   subnets = [

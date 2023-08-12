@@ -1,4 +1,4 @@
-module "cs-common" {
+module "common" {
   source  = "terraform-google-modules/folders/google"
   version = "~> 3.2"
 
@@ -8,7 +8,7 @@ module "cs-common" {
   ]
 }
 
-module "cs-envs" {
+module "envs" {
   source  = "terraform-google-modules/folders/google"
   version = "~> 3.2"
 
