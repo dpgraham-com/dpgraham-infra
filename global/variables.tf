@@ -10,5 +10,3 @@ variable "org_id" {
   default     = "898217214682"
 }
 
-
-
