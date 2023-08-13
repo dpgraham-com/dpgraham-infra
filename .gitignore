@@ -38,5 +38,6 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-terraform-key.json
+# service account keys
+**/*-key.json
 
