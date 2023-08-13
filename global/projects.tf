@@ -25,18 +25,18 @@ module "dpgraham-com-dev" {
   billing_account = var.billing_account
 }
 
-module "dpgraham-logging" {
-  source  = "terraform-google-modules/project-factory/google"
-  version = "~> 14.2"
-
-  name       = "logging"
-  project_id = "dpgraham-logging"
-  org_id     = var.org_id
-  folder_id  = module.common.id
-
-  billing_account = var.billing_account
-}
-
+#module "dpgraham-logging" {
+#  source  = "terraform-google-modules/project-factory/google"
+#  version = "~> 14.2"
+#
+#  name       = "logging"
+#  project_id = "dpgraham-logging"
+#  org_id     = var.org_id
+#  folder_id  = module.common.id
+#
+#  billing_account = var.billing_account
+#}
+#
 
 module "dpgraham-vpc-host-prod" {
   source  = "terraform-google-modules/project-factory/google"

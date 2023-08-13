@@ -58,58 +58,60 @@ module "folders-iam-1-containeradmin" {
   }
 }
 
-module "projects-iam-2-loggingviewer" {
-  source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "~> 7.4"
+## IAM permissions related to the logging project
 
-  projects = [
-    module.dpgraham-logging.project_id,
-  ]
-  bindings = {
-    "roles/logging.viewer" = [
-      "group:gcp-logging-viewers@dpgraham.com",
-    ]
-  }
-}
-
-module "projects-iam-2-loggingprivateLogViewer" {
-  source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "~> 7.4"
-
-  projects = [
-    module.dpgraham-logging.project_id,
-  ]
-  bindings = {
-    "roles/logging.privateLogViewer" = [
-      "group:gcp-logging-viewers@dpgraham.com",
-    ]
-  }
-}
-
-module "projects-iam-2-bigquerydataViewer" {
-  source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "~> 7.4"
-
-  projects = [
-    module.dpgraham-logging.project_id,
-  ]
-  bindings = {
-    "roles/bigquery.dataViewer" = [
-      "group:gcp-logging-viewers@dpgraham.com",
-    ]
-  }
-}
-
-module "projects-iam-3-bigquerydataViewer" {
-  source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "~> 7.4"
-
-  projects = [
-    module.dpgraham-logging.project_id,
-  ]
-  bindings = {
-    "roles/bigquery.dataViewer" = [
-      "group:gcp-security-admins@dpgraham.com",
-    ]
-  }
-}
+#module "projects-iam-2-loggingviewer" {
+#  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+#  version = "~> 7.4"
+#
+#  projects = [
+#    module.dpgraham-logging.project_id,
+#  ]
+#  bindings = {
+#    "roles/logging.viewer" = [
+#      "group:gcp-logging-viewers@dpgraham.com",
+#    ]
+#  }
+#}
+#
+#module "projects-iam-2-loggingprivateLogViewer" {
+#  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+#  version = "~> 7.4"
+#
+#  projects = [
+#    module.dpgraham-logging.project_id,
+#  ]
+#  bindings = {
+#    "roles/logging.privateLogViewer" = [
+#      "group:gcp-logging-viewers@dpgraham.com",
+#    ]
+#  }
+#}
+#
+#module "projects-iam-2-bigquerydataViewer" {
+#  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+#  version = "~> 7.4"
+#
+#  projects = [
+#    module.dpgraham-logging.project_id,
+#  ]
+#  bindings = {
+#    "roles/bigquery.dataViewer" = [
+#      "group:gcp-logging-viewers@dpgraham.com",
+#    ]
+#  }
+#}
+#
+#module "projects-iam-3-bigquerydataViewer" {
+#  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+#  version = "~> 7.4"
+#
+#  projects = [
+#    module.dpgraham-logging.project_id,
+#  ]
+#  bindings = {
+#    "roles/bigquery.dataViewer" = [
+#      "group:gcp-security-admins@dpgraham.com",
+#    ]
+#  }
+#}
