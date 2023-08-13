@@ -16,3 +16,8 @@ provider "google" {
   region  = var.region
   zone    = "us-east1-b"
 }
+
+module "vpc" {
+  source      = "./vpc"
+  environment = "dev"
+}
