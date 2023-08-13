@@ -19,7 +19,7 @@ module "logging-destination" {
   source  = "terraform-google-modules/log-export/google//modules/logbucket"
   version = "~> 7.4.1"
 
-  project_id               = module.logging-km289-xm965.project_id
+  project_id               = module.dpgraham-logging.project_id
   name                     = "logdest-${random_id.suffix.hex}"
   location                 = "global"
   retention_days           = 365

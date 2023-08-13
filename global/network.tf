@@ -3,7 +3,7 @@ module "vpc-prod-shared" {
   source  = "terraform-google-modules/network/google"
   version = "~> 5.0"
 
-  project_id   = module.vpc-host-prod-km289-xm965.project_id
+  project_id   = module.dpgraham-vpc-host-prod.project_id
   network_name = "vpc-prod-shared"
 
   subnets = [
@@ -96,7 +96,7 @@ module "vpc-dev-shared" {
   source  = "terraform-google-modules/network/google"
   version = "~> 5.0"
 
-  project_id   = module.vpc-host-nonprod-km289-xm965.project_id
+  project_id   = module.dpgraham-vpc-host-nonprod.project_id
   network_name = "vpc-dev-shared"
 
   subnets = [
