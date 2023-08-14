@@ -7,7 +7,6 @@ variable "region" {
 variable "project_id" {
   description = "The project id to deploy to"
   type        = string
-  default     = "dpgraham"
 }
 
 variable "name" {

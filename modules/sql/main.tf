@@ -18,9 +18,9 @@ resource "google_sql_database_instance" "database_instance" {
   database_version = "POSTGRES_14"
   region           = var.region
   project          = var.project_id
-  #  depends_on       = [
-  #    google_service_networking_connection.sql_vpc_connection
-  #  ]
+  depends_on       = [
+    google_service_networking_connection.sql_vpc_connection
+  ]
 
   settings {
     tier              = local.database_tier
@@ -60,10 +60,10 @@ resource "google_compute_global_address" "private_ip_range" {
   network       = var.vpc
 }
 
-#resource "google_service_networking_connection" "sql_vpc_connection" {
-#  network                 = var.vpc
-#  service                 = "servicenetworking.googleapis.com"
-#  reserved_peering_ranges = [
-#    google_compute_global_address.private_ip_range.name
-#  ]
-#}
+resource "google_service_networking_connection" "sql_vpc_connection" {
+  network                 = var.vpc
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [
+    google_compute_global_address.private_ip_range.name
+  ]
+}
