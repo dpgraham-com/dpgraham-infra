@@ -17,7 +17,7 @@ output "db_password" {
 output "db_host" {
   value = google_sql_database_instance.database_instance.private_ip_address
 }
-
-output "vpc_connector" {
-  value = google_service_networking_connection.sql_vpc_connection.id
-}
+#
+#output "vpc_connector" {
+#  value = google_service_networking_connection.sql_vpc_connection.id
+#}

@@ -9,7 +9,8 @@ locals {
   database_tier = var.environment == "production" ? "db-custom-1-3840" : "db-f1-micro"
   disk_size     = var.environment == "production" ? 10 : 10 # in GB, 10 GB is the minimum
   availability  = var.environment == "production" ? "REGIONAL" : "ZONAL"
-  instance_name = var.environment == "production" ? "${var.name}-postgres" : "${var.name}-postgres-dev"
+  instance_name = var.environment == "production" ? "${replace(var.name,"_","-")}-postgres" : "${replace(var.name,"_" ,"-" )}-postgres-dev"
+  ip_range_name = "${replace(var.name, "_", "-")}-ip-range"
 }
 
 resource "google_sql_database_instance" "database_instance" {
@@ -17,9 +18,9 @@ resource "google_sql_database_instance" "database_instance" {
   database_version = "POSTGRES_14"
   region           = var.region
   project          = var.project_id
-  depends_on       = [
-    google_service_networking_connection.sql_vpc_connection
-  ]
+  #  depends_on       = [
+  #    google_service_networking_connection.sql_vpc_connection
+  #  ]
 
   settings {
     tier              = local.database_tier
@@ -52,17 +53,17 @@ resource "google_sql_user" "user" {
 
 # This is part of setting up private services access for Cloud SQL
 resource "google_compute_global_address" "private_ip_range" {
-  name          = "${var.name}-ip-range"
+  name          = local.ip_range_name
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
   network       = var.vpc
 }
 
-resource "google_service_networking_connection" "sql_vpc_connection" {
-  network                 = var.vpc
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [
-    google_compute_global_address.private_ip_range.name
-  ]
-}
+#resource "google_service_networking_connection" "sql_vpc_connection" {
+#  network                 = var.vpc
+#  service                 = "servicenetworking.googleapis.com"
+#  reserved_peering_ranges = [
+#    google_compute_global_address.private_ip_range.name
+#  ]
+#}
