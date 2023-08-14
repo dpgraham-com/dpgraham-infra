@@ -13,3 +13,20 @@ variable "region" {
   description = "The region to deploy to"
   default     = "us-east1"
 }
+
+variable "db_name" {
+  description = "The name of the database"
+  type        = string
+}
+
+variable "db_username" {
+  description = "The username of the built in database user"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_password" {
+  description = "The password of the built in database user"
+  type        = string
+  sensitive   = true
+}

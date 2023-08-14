@@ -4,8 +4,7 @@ variable "project_id" {
   description = "The project ID to deploy to"
 }
 
-variable "project" {
-  default     = "dpgraham-dev"
+variable "name" {
   type        = string
   description = "The project name to deploy to"
 }

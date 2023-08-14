@@ -6,10 +6,10 @@
 
 locals {
   # database tiers follow legacy sets of "db-custom-<VCPUs>-<RAM in MB>"
-  database_tier = var.environment == "production" ? "db-custom-1-3840" : "db-f1-micro"
-  disk_size     = var.environment == "production" ? 10 : 10 # in GB, 10 GB is the minimum
-  availability  = var.environment == "production" ? "REGIONAL" : "ZONAL"
-  instance_name = var.environment == "production" ? "${replace(var.name,"_","-")}-postgres" : "${replace(var.name,"_" ,"-" )}-postgres-dev"
+  database_tier = var.environment == "prod" ? "db-custom-1-3840" : "db-f1-micro"
+  disk_size     = var.environment == "prod" ? 10 : 10 # in GB, 10 GB is the minimum
+  availability  = var.environment == "prod" ? "REGIONAL" : "ZONAL"
+  instance_name = var.environment == "prod" ? "${replace(var.name,"_","-")}-postgres" : "${replace(var.name,"_" ,"-" )}-postgres-dev"
   ip_range_name = "${replace(var.name, "_", "-")}-ip-range"
 }
 

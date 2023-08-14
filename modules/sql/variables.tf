@@ -1,5 +1,5 @@
 variable "region" {
-  description = "The region to deploy to"
+  description = "The GCP region the database will be hosted in"
   type        = string
   default     = "us-east1"
 }
@@ -10,7 +10,7 @@ variable "project_id" {
 }
 
 variable "name" {
-  description = "The name to deploy to"
+  description = "The name of the database to create"
   type        = string
   default     = "dpgraham"
 }
@@ -31,8 +31,8 @@ variable "environment" {
   description = "The environment to deploy to"
   type        = string
   validation {
-    condition     = contains(["development", "production"], var.environment)
-    error_message = "Environment must be one of [development, production]"
+    condition     = contains(["dev", "prod"], var.environment)
+    error_message = "Environment must be one of [devel, prod]"
   }
 }
 

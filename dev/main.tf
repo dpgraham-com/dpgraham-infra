@@ -18,8 +18,8 @@ provider "google" {
 }
 
 module "apis" {
-  source  = "../modules/gcp-apis"
-  project = var.project
+  source   = "../modules/gcp-apis"
+  project  = var.project
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com"
@@ -28,15 +28,16 @@ module "apis" {
 
 module "vpc" {
   source      = "./vpc"
+  name        = "vpc"
   environment = "dev"
 }
 
 module "database" {
   source      = "../modules/sql"
-  name        = "test-db-module"
-  db_password = "password123"
-  db_username = "root"
-  environment = "development"
+  name        = var.db_name
+  db_password = var.db_password
+  db_username = var.db_username
+  environment = "dev"
   project_id  = var.project
   vpc         = module.vpc.network
 }

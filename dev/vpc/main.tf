@@ -1,5 +1,5 @@
 locals {
-  name = var.environment == "prod" ? "${var.project}-prod" : "${var.project}-dev"
+  name = var.environment == "prod" ? "${var.name}-prod" : "${var.name}-dev"
 }
 
 module "vpc" {
@@ -9,6 +9,7 @@ module "vpc" {
   network_name            = local.name
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = false
+  #  ToDo, allows creating multiple subnets
   subnets                 = [
     {
       subnet_name   = "subnet-${var.region}-1"
