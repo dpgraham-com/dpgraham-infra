@@ -30,3 +30,9 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "artifact_repo" {
+  description = "The ID of the artifact repository"
+  type        = string
+  default     = "dpgraham-com-dev"
+}

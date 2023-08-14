@@ -22,7 +22,8 @@ module "apis" {
   project  = var.project
   services = [
     "servicenetworking.googleapis.com",
-    "sqladmin.googleapis.com"
+    "sqladmin.googleapis.com",
+    "artifactregistry.googleapis.com"
   ]
 }
 
@@ -41,3 +42,10 @@ module "database" {
   project_id  = var.project
   vpc         = module.vpc.network
 }
+
+module "artifact_registry" {
+  source = "../modules/registry"
+  repo   = var.artifact_repo
+  region = var.region
+}
+
