@@ -32,12 +32,22 @@ module "vpc" {
   environment = "dev"
 }
 
-module "database" {
-  source      = "../modules/sql"
-  name        = var.db_name
-  db_password = var.db_password
-  db_username = var.db_username
-  environment = "dev"
-  project_id  = var.project
-  vpc         = module.vpc.network
-}
+#module "database" {
+#  source      = "../modules/sql"
+#  name        = var.db_name
+#  db_password = var.db_password
+#  db_username = var.db_username
+#  environment = "dev"
+#  project_id  = var.project
+#  vpc         = module.vpc.network
+#}
+
+#module "database-2" {
+#  source      = "../modules/sql"
+#  name        = "db-2"
+#  db_password = var.db_password
+#  db_username = var.db_username
+#  environment = "dev"
+#  project_id  = var.project
+#  vpc         = module.vpc.shared_network
+#}
