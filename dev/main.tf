@@ -41,20 +41,62 @@ module "artifact_registry" {
   region = var.region
 }
 
-#module "database" {
-#  source      = "../modules/sql" # using local modules until I can these are versioned in the main branch of the repo
-#  name        = var.db_name
-#  db_password = var.db_password
-#  db_username = var.db_username
-#  environment = "dev"
-#  project_id  = var.project
-#  vpc         = module.vpc.network
-#}
+module "database" {
+  source      = "../modules/sql" # using local modules until I can these are versioned in the main branch of the repo
+  name        = var.db_name
+  db_password = var.db_password
+  db_username = var.db_username
+  environment = "dev"
+  project_id  = var.project
+  vpc         = module.vpc.network
+}
 
-#
+
+resource "google_cloud_run_v2_service" "default" {
+  name     = "server"
+  location = var.region
+  lifecycle {
+    ignore_changes = [template, client, client_version, labels]
+  }
+
+  template {
+    containers {
+      ports {
+        container_port = "8080"
+      }
+      #      image = var.image
+      image = format("%s-docker.pkg.dev/%s/%s/%s:test", module.artifact_registry.location, var.project, module.artifact_registry.id, var.server_image_name)
+      env {
+        name  = "DB_PORT"
+        value = "5432"
+      }
+      env {
+        name  = "DB_NAME"
+        value = module.database.db_name
+      }
+      env {
+        name  = "DB_USER"
+        value = module.database.db_user
+      }
+      env {
+        name  = "DB_PASSWORD"
+        value = module.database.db_password
+      }
+      env {
+        name  = "DB_HOST"
+        value = module.database.db_host
+      }
+    }
+    scaling {
+      max_instance_count = 3
+    }
+  }
+}
+
+
 #module "server-service" {
 #  source        = "../modules/cloud-run"
-#  name          = "${var.project}-server"
+#  name          = "server"
 #  image         = format("%s-docker.pkg.dev/%s/%s/%s:test", module.artifact_registry.location, var.project, module.artifact_registry.id, var.server_image_name)
 #  vpc_connector = module.database.vpc_connector
 #  port          = "8080"
