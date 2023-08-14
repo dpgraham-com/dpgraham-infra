@@ -39,9 +39,10 @@ module "vpc-prod-shared" {
         metadata = "INCLUDE_ALL_METADATA"
       }
 
-      allow = [{
-        protocol = "icmp"
-        ports    = []
+      allow = [
+        {
+          protocol = "icmp"
+          ports    = []
         }
       ]
 
@@ -58,9 +59,10 @@ module "vpc-prod-shared" {
         metadata = "INCLUDE_ALL_METADATA"
       }
 
-      allow = [{
-        protocol = "tcp"
-        ports    = ["22"]
+      allow = [
+        {
+          protocol = "tcp"
+          ports    = ["22"]
         }
       ]
 
@@ -77,9 +79,10 @@ module "vpc-prod-shared" {
         metadata = "INCLUDE_ALL_METADATA"
       }
 
-      allow = [{
-        protocol = "tcp"
-        ports    = ["3389"]
+      allow = [
+        {
+          protocol = "tcp"
+          ports    = ["3389"]
         }
       ]
 
@@ -124,9 +127,10 @@ module "vpc-dev-shared" {
         metadata = "INCLUDE_ALL_METADATA"
       }
 
-      allow = [{
-        protocol = "icmp"
-        ports    = []
+      allow = [
+        {
+          protocol = "icmp"
+          ports    = []
         }
       ]
 
@@ -143,9 +147,10 @@ module "vpc-dev-shared" {
         metadata = "INCLUDE_ALL_METADATA"
       }
 
-      allow = [{
-        protocol = "tcp"
-        ports    = ["22"]
+      allow = [
+        {
+          protocol = "tcp"
+          ports    = ["22"]
         }
       ]
 
@@ -162,9 +167,10 @@ module "vpc-dev-shared" {
         metadata = "INCLUDE_ALL_METADATA"
       }
 
-      allow = [{
-        protocol = "tcp"
-        ports    = ["3389"]
+      allow = [
+        {
+          protocol = "tcp"
+          ports    = ["3389"]
         }
       ]
 
@@ -174,5 +180,4 @@ module "vpc-dev-shared" {
     },
   ]
 }
-
 
