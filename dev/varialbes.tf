@@ -36,3 +36,9 @@ variable "artifact_repo" {
   type        = string
   default     = "dpgraham-com-dev"
 }
+
+variable "server_image_name" {
+  description = "The name of the server image stored in the GCP Artifact Repository"
+  type        = string
+  default     = "server"
+}

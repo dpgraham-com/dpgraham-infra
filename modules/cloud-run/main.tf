@@ -1,6 +1,6 @@
 locals {
-  name               = var.environment == "production" ? var.name : "${var.name}-${var.environment}"
-  max_instance_count = var.environment == "production" ? 3 : 1
+  name               = var.environment == "prod" ? var.name : "${var.name}-dev"
+  max_instance_count = var.environment == "prod" ? 3 : 1
 }
 
 resource "google_cloud_run_v2_service" "default" {
