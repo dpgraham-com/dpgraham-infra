@@ -8,3 +8,9 @@ variable "org_id" {
   type        = string
 }
 
+variable "primary_domain" {
+  description = "The primary domain for the associated resources"
+  type        = string
+  default     = "dpgraham.com"
+}
+

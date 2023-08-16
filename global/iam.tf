@@ -58,6 +58,20 @@ module "folders-iam-1-containeradmin" {
   }
 }
 
+module "devops-iam-dev-editor" {
+  source  = "terraform-google-modules/iam/google//modules/folders_iam"
+  version = "~> 7.4"
+
+  folders = [
+    module.envs.ids["Development"],
+  ]
+  bindings = {
+    "roles/cloudsql.admin" = [
+      "group:gcp-devops@${var.primary_domain}",
+    ]
+  }
+}
+
 ## IAM permissions related to the logging project
 
 #module "projects-iam-2-loggingviewer" {
