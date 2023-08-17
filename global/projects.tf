@@ -6,10 +6,11 @@ module "dpgraham-com-prod" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 14.2"
 
-  name       = "dpgraham-prod"
-  project_id = "dpgraham-com-prod"
-  org_id     = var.org_id
-  folder_id  = module.envs.ids["Production"]
+  name                 = "dpgraham-prod"
+  project_id           = "dpgraham-com-prod"
+  org_id               = var.org_id
+  folder_id            = module.envs.ids["Production"]
+  svpc_host_project_id = module.dpgraham-vpc-host-prod.project_id
 
   billing_account = var.billing_account
 }
