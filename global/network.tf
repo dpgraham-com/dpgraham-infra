@@ -104,12 +104,6 @@ module "vpc-dev-shared" {
 
   subnets = [
     {
-      subnet_name           = "subnet-dev-1"
-      subnet_ip             = "10.128.0.0/16"
-      subnet_region         = "us-east1"
-      subnet_private_access = true
-    },
-    {
       subnet_name           = "subnet-dev-2"
       subnet_ip             = "10.1.0.0/16"
       subnet_region         = "us-central1"
@@ -179,5 +173,14 @@ module "vpc-dev-shared" {
       ]
     },
   ]
+}
+
+resource "google_compute_subnetwork" "subnet-dev-1" {
+  project                  = module.dpgraham-vpc-host-nonprod.project_id
+  region                   = "us-east1"
+  ip_cidr_range            = "10.10.0.0/16"
+  name                     = "subnet-dev-1"
+  network                  = module.vpc-dev-shared.network_id
+  private_ip_google_access = true
 }
 

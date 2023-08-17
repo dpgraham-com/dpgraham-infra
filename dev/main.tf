@@ -52,46 +52,46 @@ module "database" {
 }
 
 
-resource "google_cloud_run_v2_service" "default" {
-  name     = "server"
-  location = var.region
-  lifecycle {
-    ignore_changes = [template, client, client_version, labels]
-  }
-
-  template {
-    containers {
-      ports {
-        container_port = "8080"
-      }
-      #      image = var.image
-      image = format("%s-docker.pkg.dev/%s/%s/%s:test", module.artifact_registry.location, var.project, module.artifact_registry.id, var.server_image_name)
-      env {
-        name  = "DB_PORT"
-        value = "5432"
-      }
-      env {
-        name  = "DB_NAME"
-        value = module.database.db_name
-      }
-      env {
-        name  = "DB_USER"
-        value = module.database.db_user
-      }
-      env {
-        name  = "DB_PASSWORD"
-        value = module.database.db_password
-      }
-      env {
-        name  = "DB_HOST"
-        value = module.database.db_host
-      }
-    }
-    scaling {
-      max_instance_count = 3
-    }
-  }
-}
+#resource "google_cloud_run_v2_service" "default" {
+#  name     = "server"
+#  location = var.region
+#  lifecycle {
+#    ignore_changes = [template, client, client_version, labels]
+#  }
+#
+#  template {
+#    containers {
+#      ports {
+#        container_port = "8080"
+#      }
+#      #      image = var.image
+#      image = format("%s-docker.pkg.dev/%s/%s/%s:test", module.artifact_registry.location, var.project, module.artifact_registry.id, var.server_image_name)
+#      env {
+#        name  = "DB_PORT"
+#        value = "5432"
+#      }
+#      env {
+#        name  = "DB_NAME"
+#        value = module.database.db_name
+#      }
+#      env {
+#        name  = "DB_USER"
+#        value = module.database.db_user
+#      }
+#      env {
+#        name  = "DB_PASSWORD"
+#        value = module.database.db_password
+#      }
+#      env {
+#        name  = "DB_HOST"
+#        value = module.database.db_host
+#      }
+#    }
+#    scaling {
+#      max_instance_count = 3
+#    }
+#  }
+#}
 
 
 #module "server-service" {
