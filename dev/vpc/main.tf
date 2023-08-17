@@ -8,20 +8,12 @@ data "google_compute_network" "shared_vpc" {
 }
 
 data "google_compute_subnetwork" "shared_vpc_subnet" {
-  name       = "subnet-dev-1"
+  name       = "subnet-dev-east1"
   region     = "us-east1"
   #  network    = data.google_compute_network.shared_vpc.self_link
   project    = "dpgraham-vpc-host-nonprod"
   depends_on = [data.google_compute_network.shared_vpc]
 }
-
-#resource "google_compute_address" "internal_ip" {
-#  project      = var.project_id
-#  region       = var.region
-#  name         = "int-ip"
-#  address_type = "INTERNAL"
-#  subnetwork   = data.google_compute_subnetwork.shared_vpc_subnet.self_link
-#}
 
 module "vpc" {
   source                  = "terraform-google-modules/network/google"
