@@ -13,39 +13,88 @@ locals {
   ip_range_name = "${replace(var.name, "_", "-")}-ip-range"
 }
 
-resource "google_sql_database_instance" "database_instance" {
-  name             = local.instance_name
-  database_version = "POSTGRES_14"
-  region           = var.region
+
+resource "google_sql_database_instance" "default" {
+  database_version = "POSTGRES_15"
+  name             = "test-using-shared-vpc"
   project          = var.project_id
-  depends_on       = [
-    google_service_networking_connection.sql_vpc_connection
-  ]
+  region           = var.region
 
   settings {
-    tier              = local.database_tier
     activation_policy = "ALWAYS"
-    availability_type = local.availability
-    disk_size         = local.disk_size
-    database_flags {
-      name  = "cloudsql.iam_authentication"
-      value = "on"
+    availability_type = "ZONAL"
+
+    backup_configuration {
+      backup_retention_settings {
+        retained_backups = 7
+        retention_unit   = "COUNT"
+      }
+
+      enabled                        = true
+      location                       = "us"
+      point_in_time_recovery_enabled = true
+      start_time                     = "12:00"
+      transaction_log_retention_days = 7
     }
+
+    disk_autoresize       = true
+    disk_autoresize_limit = 0
+    disk_size             = 10
+    disk_type             = "PD_SSD"
+
     ip_configuration {
-      private_network    = var.vpc
-      ipv4_enabled       = true
-      allocated_ip_range = google_compute_global_address.private_ip_range.name
+      ipv4_enabled    = true
+      private_network = var.vpc
     }
+    pricing_plan = "PER_USE"
+    tier         = local.database_tier
   }
 }
 
-resource "google_sql_database" "postgres" {
-  name     = var.name
-  instance = google_sql_database_instance.database_instance.name
-}
+#resource "google_sql_database_instance" "database_instance" {
+#  name             = local.instance_name
+#  database_version = "POSTGRES_15"
+#  region           = var.region
+#  project          = var.project_id
+#  depends_on       = [
+#    google_service_networking_connection.sql_vpc_connection
+#  ]
+#
+#  settings {
+#    tier              = local.database_tier
+#    activation_policy = "ALWAYS"
+#    availability_type = local.availability
+#    disk_size         = local.disk_size
+#    database_flags {
+#      name  = "cloudsql.iam_authentication"
+#      value = "on"
+#    }
+#    ip_configuration {
+#      private_network    = var.vpc
+#      ipv4_enabled       = true
+#      allocated_ip_range = google_compute_global_address.private_ip_range.name
+#    }
+#    backup_configuration {
+#      backup_retention_settings {
+#        retained_backups = 3
+#        retention_unit   = "COUNT"
+#      }
+#      enabled                        = true
+#      location                       = "us"
+#      point_in_time_recovery_enabled = true
+#      start_time                     = "12:00"
+#      transaction_log_retention_days = 3
+#    }
+#  }
+#}
+
+#resource "google_sql_database" "postgres" {
+#  name     = var.name
+#  instance = google_sql_database_instance.database_instance.name
+#}
 
 resource "google_sql_user" "user" {
-  instance = google_sql_database_instance.database_instance.name
+  instance = google_sql_database_instance.default.name
   type     = "BUILT_IN"
   name     = var.db_username
   password = var.db_password

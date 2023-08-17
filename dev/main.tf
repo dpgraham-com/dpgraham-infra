@@ -40,16 +40,16 @@ module "artifact_registry" {
   repo   = var.artifact_repo
   region = var.region
 }
-
-module "database" {
-  source      = "../modules/sql" # using local modules until I can these are versioned in the main branch of the repo
-  name        = var.db_name
-  db_password = var.db_password
-  db_username = var.db_username
-  environment = "dev"
-  project_id  = var.project
-  vpc         = module.vpc.network
-}
+#
+#module "database" {
+#  source      = "../modules/sql" # using local modules until I can these are versioned in the main branch of the repo
+#  name        = var.db_name
+#  db_password = var.db_password
+#  db_username = var.db_username
+#  environment = "dev"
+#  project_id  = var.project
+#  vpc         = module.vpc.network
+#}
 
 #module "server-service" {
 #  source        = "../modules/cloud-run"

@@ -192,9 +192,3 @@ resource "google_compute_subnetwork" "subnet_dev_central1" {
   network                  = module.vpc-dev-shared.network_id
   private_ip_google_access = true
 }
-
-#resource "google_compute_global_address" "ip_dev_east1" {
-#  name    = "ip-address-dev-east1-db"
-#  network = google_compute_subnetwork.subnet-dev-east1.id
-#}
-
