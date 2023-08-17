@@ -11,28 +11,7 @@ module "vpc-prod-shared" {
   project_id   = module.dpgraham-vpc-host-prod.project_id
   network_name = "vpc-prod-shared"
 
-  subnets = [
-    {
-      subnet_name               = "subnet-prod-1"
-      subnet_ip                 = "10.128.0.0/16"
-      subnet_region             = "us-east1"
-      subnet_private_access     = true
-      subnet_flow_logs          = true
-      subnet_flow_logs_sampling = "0.5"
-      subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
-      subnet_flow_logs_interval = "INTERVAL_10_MIN"
-    },
-    {
-      subnet_name               = "subnet-prod-2"
-      subnet_ip                 = "10.1.0.0/16"
-      subnet_region             = "us-central1"
-      subnet_private_access     = true
-      subnet_flow_logs          = true
-      subnet_flow_logs_sampling = "0.5"
-      subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
-      subnet_flow_logs_interval = "INTERVAL_10_MIN"
-    },
-  ]
+  subnets = []
 
   firewall_rules = [
     {
@@ -98,6 +77,26 @@ module "vpc-prod-shared" {
   ]
 }
 
+## Prod shared VPC subnets
+# naming syntax: {company-name}-{description-label}-{region/zone-label}
+#resource "google_compute_subnetwork" "subnet-prod-east1" {
+#  project                  = module.dpgraham-vpc-host-nonprod.project_id
+#  region                   = "us-east1"
+#  ip_cidr_range            = "10.10.0.0/16"
+#  name                     = "subnet-prod-east1"
+#  network                  = module.vpc-prod-shared.network_id
+#  private_ip_google_access = true
+#}
+#
+#resource "google_compute_subnetwork" "subnet-prod-central1" {
+#  project                  = module.dpgraham-vpc-host-nonprod.project_id
+#  region                   = "us-central1"
+#  ip_cidr_range            = "10.11.0.0/16"
+#  name                     = "subnet-prod-central1"
+#  network                  = module.vpc-prod-shared.network_id
+#  private_ip_google_access = true
+#}
+
 
 # Development and non-prod organization level shared VPC
 module "vpc-dev-shared" {
@@ -108,12 +107,6 @@ module "vpc-dev-shared" {
   network_name = "vpc-dev-shared"
 
   subnets = [
-    {
-      subnet_name           = "subnet-dev-2"
-      subnet_ip             = "10.1.0.0/16"
-      subnet_region         = "us-central1"
-      subnet_private_access = true
-    },
   ]
 
   firewall_rules = [
@@ -182,7 +175,6 @@ module "vpc-dev-shared" {
 
 ## Dev shared VPC subnets
 # naming syntax: {company-name}-{description-label}-{region/zone-label}
-
 resource "google_compute_subnetwork" "subnet-dev-east1" {
   project                  = module.dpgraham-vpc-host-nonprod.project_id
   region                   = "us-east1"
@@ -192,3 +184,11 @@ resource "google_compute_subnetwork" "subnet-dev-east1" {
   private_ip_google_access = true
 }
 
+resource "google_compute_subnetwork" "subnet-dev-central1" {
+  project                  = module.dpgraham-vpc-host-nonprod.project_id
+  region                   = "us-central1"
+  ip_cidr_range            = "10.11.0.0/16"
+  name                     = "subnet-dev-central1"
+  network                  = module.vpc-dev-shared.network_id
+  private_ip_google_access = true
+}
