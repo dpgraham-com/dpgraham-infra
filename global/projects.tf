@@ -12,8 +12,8 @@ module "dpgraham-com-prod" {
   folder_id            = module.envs.ids["Production"]
   svpc_host_project_id = module.dpgraham-vpc-host-prod.project_id
   shared_vpc_subnets   = [
-    google_compute_subnetwork.subnet-prod-east1.id,
-    google_compute_subnetwork.subnet-prod-central1.id
+    google_compute_subnetwork.subnet_prod_east1.id,
+    google_compute_subnetwork.subnet_prod_central1.id
   ]
 
   billing_account = var.billing_account
@@ -30,8 +30,8 @@ module "dpgraham-com-dev" {
   folder_id            = module.envs.ids["Development"]
   svpc_host_project_id = module.dpgraham-vpc-host-nonprod.project_id
   shared_vpc_subnets   = [
-    google_compute_subnetwork.subnet-dev-east1.id,
-    google_compute_subnetwork.subnet-dev-central1.id
+    google_compute_subnetwork.subnet_dev_east1.id,
+    google_compute_subnetwork.subnet_dev_central1.id
   ]
 
   billing_account = var.billing_account

@@ -79,7 +79,7 @@ module "vpc-prod-shared" {
 
 ## Prod shared VPC subnets
 # naming syntax: {company-name}-{description-label}-{region/zone-label}
-resource "google_compute_subnetwork" "subnet-prod-east1" {
+resource "google_compute_subnetwork" "subnet_prod_east1" {
   project                  = module.dpgraham-vpc-host-prod.project_id
   region                   = "us-east1"
   ip_cidr_range            = "10.10.0.0/16"
@@ -88,7 +88,7 @@ resource "google_compute_subnetwork" "subnet-prod-east1" {
   private_ip_google_access = true
 }
 
-resource "google_compute_subnetwork" "subnet-prod-central1" {
+resource "google_compute_subnetwork" "subnet_prod_central1" {
   project                  = module.dpgraham-vpc-host-prod.project_id
   region                   = "us-central1"
   ip_cidr_range            = "10.11.0.0/16"
@@ -175,7 +175,7 @@ module "vpc-dev-shared" {
 
 ## Dev shared VPC subnets
 # naming syntax: {company-name}-{description-label}-{region/zone-label}
-resource "google_compute_subnetwork" "subnet-dev-east1" {
+resource "google_compute_subnetwork" "subnet_dev_east1" {
   project                  = module.dpgraham-vpc-host-nonprod.project_id
   region                   = "us-east1"
   ip_cidr_range            = "10.10.0.0/16"
@@ -184,7 +184,7 @@ resource "google_compute_subnetwork" "subnet-dev-east1" {
   private_ip_google_access = true
 }
 
-resource "google_compute_subnetwork" "subnet-dev-central1" {
+resource "google_compute_subnetwork" "subnet_dev_central1" {
   project                  = module.dpgraham-vpc-host-nonprod.project_id
   region                   = "us-central1"
   ip_cidr_range            = "10.11.0.0/16"
@@ -192,3 +192,9 @@ resource "google_compute_subnetwork" "subnet-dev-central1" {
   network                  = module.vpc-dev-shared.network_id
   private_ip_google_access = true
 }
+
+#resource "google_compute_global_address" "ip_dev_east1" {
+#  name    = "ip-address-dev-east1-db"
+#  network = google_compute_subnetwork.subnet-dev-east1.id
+#}
+
