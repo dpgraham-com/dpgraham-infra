@@ -18,8 +18,8 @@ provider "google" {
 }
 
 module "apis" {
-  source   = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
-  project  = var.project
+  source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
+  project = var.project
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com",
@@ -30,14 +30,21 @@ module "apis" {
 }
 
 module "vpc" {
-  source      = "./vpc"
-  name        = "vpc"
-  environment = "dev"
+  source       = "./vpc"
+  name         = "vpc"
+  environment  = "dev"
+  host_project = var.host_project
 }
 
-module "artifact_registry" {
+module "client_artifact_repo" {
   source = "../modules/registry" # using local modules until I can these are versioned in the main branch of the repo
-  repo   = var.artifact_repo
+  repo   = "client"
+  region = var.region
+}
+
+module "server_artifact_repo" {
+  source = "../modules/registry" # using local modules until I can these are versioned in the main branch of the repo
+  repo   = "server"
   region = var.region
 }
 
@@ -51,33 +58,45 @@ module "database" {
   vpc         = module.vpc.shared_vpc
 }
 
-#module "server-service" {
-#  source        = "../modules/cloud-run"
-#  name          = "server"
-#  image         = format("%s-docker.pkg.dev/%s/%s/%s:test", module.artifact_registry.location, var.project, module.artifact_registry.id, var.server_image_name)
-#  vpc_connector = module.database.vpc_connector
-#  port          = "8080"
-#  environment   = "dev"
-#  env           = [
-#    {
-#      name  = "DB_PORT"
-#      value = "5432"
-#    },
-#    {
-#      name  = "DB_NAME"
-#      value = module.database.db_name
-#    },
-#    {
-#      name  = "DB_USER"
-#      value = module.database.db_user
-#    },
-#    {
-#      name  = "DB_PASSWORD"
-#      value = module.database.db_password
-#    },
-#    {
-#      name  = "DB_HOST"
-#      value = module.database.db_host
-#    }
-#  ]
-#}
+
+module "frontend-service" {
+  source = "../modules/cloud-run"
+  name   = "frontend"
+  image  = format("%s-docker.pkg.dev/%s/%s/%s:test", module.client_artifact_repo.location, var.project, module.client_artifact_repo.name, var.client_image_name)
+  #  image         = "us-east1-docker.pkg.dev/dpgraham-com-dev/client/dpgraham-client:test"
+  vpc_connector = module.vpc.serverless_vpc_connector
+  port          = "3000"
+  environment   = "dev"
+  depends_on    = [module.vpc.serverless_vpc_connector]
+}
+
+module "server-service" {
+  source        = "../modules/cloud-run"
+  name          = "server"
+  image         = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project, module.server_artifact_repo.name, var.server_image_name)
+  vpc_connector = module.vpc.serverless_vpc_connector
+  port          = "8080"
+  environment   = "dev"
+  env = [
+    {
+      name  = "DB_PORT"
+      value = "5432"
+    },
+    {
+      name  = "DB_NAME"
+      value = module.database.db_name
+    },
+    {
+      name  = "DB_USER"
+      value = module.database.db_user
+    },
+    {
+      name  = "DB_PASSWORD"
+      value = module.database.db_password
+    },
+    {
+      name  = "DB_HOST"
+      value = module.database.db_host
+    }
+  ]
+}

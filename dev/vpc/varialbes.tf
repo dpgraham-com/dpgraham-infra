@@ -4,6 +4,12 @@ variable "project_id" {
   description = "The project ID to deploy to"
 }
 
+
+variable "host_project" {
+  description = "The project ID to deploy to"
+  type        = string
+}
+
 variable "name" {
   type        = string
   description = "The project name to deploy to"
