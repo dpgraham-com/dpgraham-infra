@@ -49,7 +49,7 @@ variable "artifact_repo" {
 variable "server_image_name" {
   description = "The name of the HTTP server image stored in the GCP Artifact Repository"
   type        = string
-  default     = "server"
+  default     = "dpgraham-server"
 }
 
 variable "client_image_name" {
