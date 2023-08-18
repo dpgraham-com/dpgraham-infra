@@ -47,6 +47,18 @@ module "developers-folders-dev" {
   }
 }
 
+# required policies to allow us to create shared VPC connectors in the service project
+module "serverless_nonprod_shared_vpc_required_iam_by_google" {
+  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+  version = "~> 7.4"
+  bindings = {
+    "roles/compute.networkUser" = [
+      "serviceAccount:service-dpgraham-com-dev@gcp-sa-vpcaccess.iam.gserviceaccount.com",
+      "serviceAccount:dpgraham-com-dev@cloudservices.gserviceaccount.com"
+    ]
+  }
+}
+
 module "devops-folder-dev" {
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
   version = "~> 7.4"
