@@ -18,8 +18,8 @@ provider "google" {
 }
 
 module "apis" {
-  source   = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
-  project  = var.project
+  source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
+  project = var.project
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com",
@@ -60,9 +60,9 @@ module "database" {
 
 
 module "frontend-service" {
-  source        = "../modules/cloud-run"
-  name          = "frontend"
-  image         = format("%s-docker.pkg.dev/%s/%s/%s:test", module.client_artifact_repo.location, var.project, module.client_artifact_repo.name, var.client_image_name)
+  source = "../modules/cloud-run"
+  name   = "frontend"
+  image  = format("%s-docker.pkg.dev/%s/%s/%s:test", module.client_artifact_repo.location, var.project, module.client_artifact_repo.name, var.client_image_name)
   #  image         = "us-east1-docker.pkg.dev/dpgraham-com-dev/client/dpgraham-client:test"
   vpc_connector = module.vpc.serverless_vpc_connector
   port          = "3000"
@@ -77,7 +77,7 @@ module "server-service" {
   vpc_connector = module.vpc.serverless_vpc_connector
   port          = "8080"
   environment   = "dev"
-  env           = [
+  env = [
     {
       name  = "DB_PORT"
       value = "5432"
