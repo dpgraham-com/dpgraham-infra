@@ -30,9 +30,10 @@ module "apis" {
 }
 
 module "vpc" {
-  source      = "./vpc"
-  name        = "vpc"
-  environment = "dev"
+  source       = "./vpc"
+  name         = "vpc"
+  environment  = "dev"
+  host_project = var.host_project
 }
 
 module "artifact_registry" {

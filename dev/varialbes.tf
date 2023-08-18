@@ -1,16 +1,25 @@
 # variables.tf
 variable "project_name" {
   description = "The project ID to deploy to"
+  type        = string
   default     = "dpgraham-dev"
 }
 
 variable "project" {
   description = "The project ID to deploy to"
+  type        = string
   default     = "dpgraham-com-dev"
+}
+
+variable "host_project" {
+  description = "The project ID to deploy to"
+  type        = string
+  default     = "dpgraham-vpc-host-nonprod"
 }
 
 variable "region" {
   description = "The region to deploy to"
+  type        = string
   default     = "us-east1"
 }
 
