@@ -55,5 +55,5 @@ variable "server_image_name" {
 variable "client_image_name" {
   description = "The name of the front end image stored in the GCP Artifact Repository"
   type        = string
-  default     = "client"
+  default     = "dpgraham-client"
 }

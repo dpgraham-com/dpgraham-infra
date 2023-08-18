@@ -33,6 +33,7 @@ module "serverless_connector" {
       machine_type    = "e2-micro"
       min_instances   = 2
       max_instances   = 10
+      max_throughput  = 1000
     }
   ]
   depends_on = [data.google_compute_subnetwork.shared_vpc_serverless_subnet]

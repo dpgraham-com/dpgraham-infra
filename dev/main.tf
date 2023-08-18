@@ -38,7 +38,7 @@ module "vpc" {
 
 module "artifact_registry" {
   source = "../modules/registry" # using local modules until I can these are versioned in the main branch of the repo
-  repo   = var.artifact_repo
+  repo   = "client"
   region = var.region
 }
 
@@ -56,10 +56,11 @@ module "database" {
 module "frontend-service" {
   source        = "../modules/cloud-run"
   name          = "${var.project}-frontend"
-  image         = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.artifact_registry.location, var.project, module.artifact_registry.id, var.client_image_name)
+  image         = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.artifact_registry.location, var.project, "client", var.client_image_name)
   vpc_connector = module.vpc.serverless_vpc_connector
   port          = "3000"
   environment   = "dev"
+  depends_on    = [module.vpc.serverless_vpc_connector]
 }
 
 #module "server-service" {
