@@ -11,7 +11,7 @@ module "dpgraham-com-prod" {
   org_id               = var.org_id
   folder_id            = module.envs.ids["Production"]
   svpc_host_project_id = module.dpgraham-vpc-host-prod.project_id
-  shared_vpc_subnets = [
+  shared_vpc_subnets   = [
     google_compute_subnetwork.subnet_prod_east1.id,
     google_compute_subnetwork.subnet_prod_central1.id
   ]
@@ -25,11 +25,11 @@ module "dpgraham-com-dev" {
   version = "~> 14.2"
 
   name                 = "dpgraham-dev"
-  project_id           = "dpgraham-com-dev"
+  project_id           = var.dev_project_id
   org_id               = var.org_id
   folder_id            = module.envs.ids["Development"]
   svpc_host_project_id = module.dpgraham-vpc-host-nonprod.project_id
-  shared_vpc_subnets = [
+  shared_vpc_subnets   = [
     google_compute_subnetwork.subnet_dev_east1.id,
     google_compute_subnetwork.subnet_dev_central1.id
   ]
@@ -63,7 +63,7 @@ module "dpgraham-vpc-host-nonprod" {
 
   billing_account                = var.billing_account
   enable_shared_vpc_host_project = true
-  activate_apis = [
+  activate_apis                  = [
     "compute.googleapis.com",
     "vpcaccess.googleapis.com"
   ]
