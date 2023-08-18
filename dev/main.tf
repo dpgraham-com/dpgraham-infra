@@ -36,9 +36,15 @@ module "vpc" {
   host_project = var.host_project
 }
 
-module "artifact_registry" {
+module "client_artifact_repo" {
   source = "../modules/registry" # using local modules until I can these are versioned in the main branch of the repo
   repo   = "client"
+  region = var.region
+}
+
+module "server_artifact_repo" {
+  source = "../modules/registry" # using local modules until I can these are versioned in the main branch of the repo
+  repo   = "server"
   region = var.region
 }
 
@@ -56,7 +62,7 @@ module "database" {
 module "frontend-service" {
   source        = "../modules/cloud-run"
   name          = "frontend"
-  image         = format("%s-docker.pkg.dev/%s/%s/%s:test", module.artifact_registry.location, var.project, "client", var.client_image_name)
+  image         = format("%s-docker.pkg.dev/%s/%s/%s:test", module.client_artifact_repo.location, var.project, "client", var.client_image_name)
   #  image         = "us-east1-docker.pkg.dev/dpgraham-com-dev/client/dpgraham-client:test"
   vpc_connector = module.vpc.serverless_vpc_connector
   port          = "3000"
