@@ -47,7 +47,13 @@ variable "artifact_repo" {
 }
 
 variable "server_image_name" {
-  description = "The name of the server image stored in the GCP Artifact Repository"
+  description = "The name of the HTTP server image stored in the GCP Artifact Repository"
   type        = string
   default     = "server"
+}
+
+variable "client_image_name" {
+  description = "The name of the front end image stored in the GCP Artifact Repository"
+  type        = string
+  default     = "client"
 }

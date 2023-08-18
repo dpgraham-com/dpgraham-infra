@@ -52,6 +52,16 @@ module "database" {
   vpc         = module.vpc.shared_vpc
 }
 
+
+module "frontend-service" {
+  source        = "../modules/cloud-run"
+  name          = "${var.project}-frontend"
+  image         = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.artifact_registry.location, var.project, module.artifact_registry.id, var.client_image_name)
+  vpc_connector = module.vpc.serverless_vpc_connector
+  port          = "3000"
+  environment   = "dev"
+}
+
 #module "server-service" {
 #  source        = "../modules/cloud-run"
 #  name          = "server"
