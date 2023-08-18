@@ -55,8 +55,9 @@ module "database" {
 
 module "frontend-service" {
   source        = "../modules/cloud-run"
-  name          = "${var.project}-frontend"
-  image         = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.artifact_registry.location, var.project, "client", var.client_image_name)
+  name          = "frontend"
+  image         = format("%s-docker.pkg.dev/%s/%s/%s:test", module.artifact_registry.location, var.project, "client", var.client_image_name)
+  #  image         = "us-east1-docker.pkg.dev/dpgraham-com-dev/client/dpgraham-client:test"
   vpc_connector = module.vpc.serverless_vpc_connector
   port          = "3000"
   environment   = "dev"
