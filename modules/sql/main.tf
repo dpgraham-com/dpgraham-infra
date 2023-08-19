@@ -51,6 +51,12 @@ resource "google_sql_database_instance" "default" {
   }
 }
 
+# The database that will be deployed in the database instance
+resource "google_sql_database" "postgres" {
+  name     = var.name
+  instance = google_sql_database_instance.default.name
+}
+
 resource "google_sql_user" "user" {
   instance = google_sql_database_instance.default.name
   type     = "BUILT_IN"
