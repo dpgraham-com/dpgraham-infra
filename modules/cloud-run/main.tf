@@ -48,4 +48,5 @@ resource "google_cloud_run_service_iam_policy" "no_auth" {
   service  = google_cloud_run_v2_service.default.name
 
   policy_data = data.google_iam_policy.no_auth.policy_data
+  depends_on = [google_cloud_run_v2_service.default, data.google_iam_policy.no_auth]
 }

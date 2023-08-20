@@ -63,3 +63,20 @@ resource "google_sql_user" "user" {
   name     = var.db_username
   password = var.db_password
 }
+
+# This is part of setting up private services access for Cloud SQL
+resource "google_compute_global_address" "private_ip_range" {
+  name          = "${var.name}-ip-range"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = var.vpc
+}
+
+resource "google_service_networking_connection" "sql_vpc_connection" {
+  network                 = var.vpc
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [
+    google_compute_global_address.private_ip_range.name
+  ]
+}

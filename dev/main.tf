@@ -55,7 +55,8 @@ module "database" {
   db_username = var.db_username
   environment = "dev"
   project_id  = var.project
-  vpc         = module.vpc.shared_vpc
+  vpc         = module.vpc.network
+  #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
 }
 
 
@@ -70,33 +71,33 @@ module "frontend-service" {
   depends_on    = [module.vpc.serverless_vpc_connector]
 }
 
-module "server-service" {
-  source        = "../modules/cloud-run"
-  name          = "server"
-  image         = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project, module.server_artifact_repo.name, var.server_image_name)
-  vpc_connector = module.vpc.serverless_vpc_connector
-  port          = "8080"
-  environment   = "dev"
-  env = [
-    {
-      name  = "DB_PORT"
-      value = "5432"
-    },
-    {
-      name  = "DB_NAME"
-      value = module.database.db_name
-    },
-    {
-      name  = "DB_USER"
-      value = module.database.db_user
-    },
-    {
-      name  = "DB_PASSWORD"
-      value = module.database.db_password
-    },
-    {
-      name  = "DB_HOST"
-      value = module.database.db_host
-    }
-  ]
-}
+#module "server-service" {
+#  source        = "../modules/cloud-run"
+#  name          = "server"
+#  image         = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project, module.server_artifact_repo.name, var.server_image_name)
+#  vpc_connector = module.database.vpc_connector
+#  port          = "8080"
+#  environment   = "dev"
+#  env = [
+#    {
+#      name  = "DB_PORT"
+#      value = "5432"
+#    },
+#    {
+#      name  = "DB_NAME"
+#      value = module.database.db_name
+#    },
+#    {
+#      name  = "DB_USER"
+#      value = module.database.db_user
+#    },
+#    {
+#      name  = "DB_PASSWORD"
+#      value = module.database.db_password
+#    },
+#    {
+#      name  = "DB_HOST"
+#      value = module.database.db_host
+#    }
+#  ]
+#}
