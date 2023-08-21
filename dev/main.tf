@@ -126,10 +126,11 @@ module "server-service" {
 }
 
 module "load_balancer" {
-  source          = "../modules/global-lb"
-  name            = "${var.project}-lb"
-  backend_service = module.server-service.name
-  environment     = "dev"
-  project_id      = var.project
-  domain_name     = var.domain
+  source           = "../modules/global-lb"
+  name             = "${var.project}-lb"
+  backend_service  = module.server-service.name
+  frontend_service = module.frontend-service.name
+  environment      = "dev"
+  project_id       = var.project
+  domain_name      = var.domain
 }

@@ -30,6 +30,11 @@ variable "backend_service" {
   type        = string
 }
 
+variable "frontend_service" {
+  description = "The name of the frontend service the serves our react app"
+  type        = string
+}
+
 variable "region" {
   description = "The region to deploy to"
   type        = string

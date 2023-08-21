@@ -9,6 +9,17 @@ resource "google_compute_region_network_endpoint_group" "serverless_neg" {
   }
 }
 
+resource "google_compute_region_network_endpoint_group" "client_serverless_neg" {
+  provider              = google-beta
+  name                  = "client-serverless-neg"
+  network_endpoint_type = "SERVERLESS"
+  region                = var.region
+  project               = var.project_id
+  cloud_run {
+    service = var.frontend_service
+  }
+}
+
 resource "google_compute_url_map" "lb-server-client-map" {
   name            = var.name
   default_service = module.lb-http.backend_services["default"].self_link
@@ -61,7 +72,7 @@ module "lb-http" {
       description = "Cloud backend for directing requests to the react backend"
       groups      = [
         {
-          group = google_compute_region_network_endpoint_group.serverless_neg.id
+          group = google_compute_region_network_endpoint_group.client_serverless_neg.id
         }
       ]
       enable_cdn = false
