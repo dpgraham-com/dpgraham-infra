@@ -81,7 +81,7 @@ module "frontend-service" {
   env            = [
     {
       name  = "VITE_API_URL"
-      value = "https://dev.${var.domain}/api"
+      value = "https://${var.domain}/api"
     }
   ]
 }

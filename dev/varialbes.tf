@@ -61,5 +61,5 @@ variable "client_image_name" {
 variable "domain" {
   description = "The domain name to use for the application"
   type        = string
-  default     = "dpgraham.com"
+  default     = "dev.dpgraham.com"
 }
