@@ -69,6 +69,23 @@ module "database" {
   depends_on  = [module.apis]
 }
 
+module "frontend-service" {
+  source         = "../modules/cloud-run"
+  name           = "client"
+  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.client_artifact_repo.location, var.project, module.client_artifact_repo.name, var.client_image_name)
+  vpc            = module.vpc.network
+  port           = "3000"
+  environment    = "dev"
+  connector_cidr = "10.9.0.0/28"
+  project        = var.project
+  env            = [
+    {
+      name  = "VITE_API_URL"
+      value = "https://dev.${var.domain}/api"
+    }
+  ]
+}
+
 module "server-service" {
   source = "../modules/cloud-run"
 
@@ -114,5 +131,5 @@ module "load_balancer" {
   backend_service = module.server-service.name
   environment     = "dev"
   project_id      = var.project
-  domain_name     = "dpgraham.com"
+  domain_name     = var.domain
 }
