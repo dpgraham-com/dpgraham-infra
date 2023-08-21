@@ -9,18 +9,6 @@ resource "google_compute_region_network_endpoint_group" "serverless_neg" {
   }
 }
 
-resource "google_compute_region_network_endpoint_group" "client_serverless_neg" {
-  provider              = google-beta
-  name                  = "client-serverless-neg"
-  network_endpoint_type = "SERVERLESS"
-  region                = var.region
-  project               = var.project_id
-  cloud_run {
-    service = var.frontend_service
-  }
-}
-
-
 resource "google_compute_url_map" "lb-server-client-map" {
   name            = var.name
   default_service = module.lb-http.backend_services["default"].self_link
@@ -56,24 +44,24 @@ resource "google_compute_url_map" "https_redirect" {
 
 
 module "lb-http" {
-  source                          = "GoogleCloudPlatform/lb-http/google//modules/serverless_negs"
-  version                         = "~> 9.0"
-  name                            = var.name
-  project                         = var.project_id
-  ssl                             = var.ssl
-  managed_ssl_certificate_domains = [var.domain_name]
-  https_redirect                  = var.ssl
-  labels                          = { "example-label" = "cloud-run-example" }
-  load_balancing_scheme           = "EXTERNAL_MANAGED"
-  url_map                         = google_compute_url_map.lb-server-client-map.self_link
-  create_url_map                  = false
+  source                = "GoogleCloudPlatform/lb-http/google//modules/serverless_negs"
+  version               = "~> 9.0"
+  name                  = var.name
+  project               = var.project_id
+  ssl                   = false
+  #  managed_ssl_certificate_domains = [var.domain_name]
+  #  https_redirect                  = false
+  labels                = { "example-label" = "cloud-run-example" }
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  url_map               = google_compute_url_map.lb-server-client-map.self_link
+  create_url_map        = false
 
   backends = {
     default = {
       description = "Cloud backend for directing requests to the react backend"
       groups      = [
         {
-          group = google_compute_region_network_endpoint_group.client_serverless_neg.id
+          group = google_compute_region_network_endpoint_group.serverless_neg.id
         }
       ]
       enable_cdn = false

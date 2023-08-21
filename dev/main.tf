@@ -107,3 +107,12 @@ module "server-service" {
     }
   ]
 }
+
+module "load_balancer" {
+  source          = "../modules/global-lb"
+  name            = "${var.project}-lb"
+  backend_service = module.server-service.name
+  environment     = "dev"
+  project_id      = var.project
+  domain_name     = "dpgraham.com"
+}

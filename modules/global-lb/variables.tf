@@ -1,7 +1,6 @@
 variable "project_id" {
   description = "The project ID to deploy to"
   type        = string
-  default     = "dpgraham"
 }
 
 variable "static_ip_name" {
@@ -18,7 +17,6 @@ variable "name" {
 variable "domain_name" {
   description = "The domain name to use for the load balancer"
   type        = string
-  default     = "dpgraham.com"
 }
 
 variable "ssl" {
@@ -29,11 +27,6 @@ variable "ssl" {
 
 variable "backend_service" {
   description = "The name of the backend service that serves our restful API"
-  type        = string
-}
-
-variable "frontend_service" {
-  description = "The name of the frontend service the serves our react app"
   type        = string
 }
 
