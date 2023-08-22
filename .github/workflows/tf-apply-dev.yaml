@@ -38,4 +38,8 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
+        env:
+          TF_VAR_db_name: ${{ secrets.DB_NAME }}
+          TF_VAR_db_username: ${{ secrets.DB_USERNAME }}
+          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
 
