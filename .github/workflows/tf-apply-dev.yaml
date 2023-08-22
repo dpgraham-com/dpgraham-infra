@@ -16,6 +16,8 @@ jobs:
     if: github.repository == 'dpgraham-com/dpgraham-infra'
     name: Terraform Apply
     environment: development
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

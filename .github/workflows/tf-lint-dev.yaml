@@ -2,9 +2,13 @@ name: Lint and validate Development Environment
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "dev/**/*.tf"
   pull_request:
+    branches:
+      - main
     paths:
       - "dev/**/*.tf"
 

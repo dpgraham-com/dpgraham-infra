@@ -2,6 +2,8 @@ name: Terraform Plan Development Environment
 
 on:
   pull_request:
+    branches:
+      - main
     paths:
       - 'dev/**'
 
@@ -20,6 +22,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      id-token: 'write'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
