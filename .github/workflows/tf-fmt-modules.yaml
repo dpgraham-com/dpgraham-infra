@@ -1,0 +1,24 @@
+name: Lint and validate Terraform modules
+
+on:
+  push:
+    paths:
+      - "modules/**/*.tf"
+  pull_request:
+    paths:
+      - "modules/**/*.tf"
+
+
+jobs:
+  check_fmt:
+    name: Check Module Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform fmt
+        run: terraform fmt ./modules -check -recursive

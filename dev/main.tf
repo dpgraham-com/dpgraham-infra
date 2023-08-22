@@ -17,6 +17,11 @@ provider "google" {
   zone    = "us-east1-b"
 }
 
+# Enable Google APIs
+# API managed outside of terraform include
+# compute.googleapis.com
+# storage-component.googleapis.com
+# go to https://console.cloud.google.com/apis/dashboard to see the full list of enabled APIs
 module "apis" {
   source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
   project = var.project
@@ -37,15 +42,19 @@ module "vpc" {
 }
 
 module "client_artifact_repo" {
-  source = "../modules/registry" # using local modules until I can these are versioned in the main branch of the repo
-  repo   = "client"
-  region = var.region
+  source = "../modules/registry"
+  # using local modules until I can these are versioned in the main branch of the repo
+  repo       = "client"
+  region     = var.region
+  depends_on = [module.apis]
 }
 
 module "server_artifact_repo" {
-  source = "../modules/registry" # using local modules until I can these are versioned in the main branch of the repo
-  repo   = "server"
-  region = var.region
+  source = "../modules/registry"
+  # using local modules until I can these are versioned in the main branch of the repo
+  repo       = "server"
+  region     = var.region
+  depends_on = [module.apis]
 }
 
 module "database" {
@@ -55,28 +64,39 @@ module "database" {
   db_username = var.db_username
   environment = "dev"
   project_id  = var.project
-  vpc         = module.vpc.shared_vpc
+  vpc         = module.vpc.network
+  #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
+  depends_on = [module.apis]
 }
 
-
 module "frontend-service" {
-  source = "../modules/cloud-run"
-  name   = "frontend"
-  image  = format("%s-docker.pkg.dev/%s/%s/%s:test", module.client_artifact_repo.location, var.project, module.client_artifact_repo.name, var.client_image_name)
-  #  image         = "us-east1-docker.pkg.dev/dpgraham-com-dev/client/dpgraham-client:test"
-  vpc_connector = module.vpc.serverless_vpc_connector
-  port          = "3000"
-  environment   = "dev"
-  depends_on    = [module.vpc.serverless_vpc_connector]
+  source         = "../modules/cloud-run"
+  name           = "client"
+  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.client_artifact_repo.location, var.project, module.client_artifact_repo.name, var.client_image_name)
+  vpc            = module.vpc.network
+  port           = "3000"
+  environment    = "dev"
+  connector_cidr = "10.9.0.0/28"
+  project        = var.project
+  env = [
+    {
+      name  = "VITE_API_URL"
+      value = "https://${var.domain}/api"
+    }
+  ]
 }
 
 module "server-service" {
-  source        = "../modules/cloud-run"
-  name          = "server"
-  image         = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project, module.server_artifact_repo.name, var.server_image_name)
-  vpc_connector = module.vpc.serverless_vpc_connector
-  port          = "8080"
-  environment   = "dev"
+  source = "../modules/cloud-run"
+
+  project        = var.project
+  connector_cidr = "10.8.0.0/28"
+  name           = "server"
+  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project, module.server_artifact_repo.name, var.server_image_name)
+  vpc            = module.vpc.network
+  port           = "8080"
+  environment    = "dev"
+  depends_on     = [module.apis]
   env = [
     {
       name  = "DB_PORT"
@@ -95,8 +115,22 @@ module "server-service" {
       value = module.database.db_password
     },
     {
+      name  = "HOST"
+      value = "0.0.0.0"
+    },
+    {
       name  = "DB_HOST"
       value = module.database.db_host
     }
   ]
+}
+
+module "load_balancer" {
+  source           = "../modules/global-lb"
+  name             = "${var.project}-lb"
+  backend_service  = module.server-service.name
+  frontend_service = module.frontend-service.name
+  environment      = "dev"
+  project_id       = var.project
+  domain_name      = var.domain
 }

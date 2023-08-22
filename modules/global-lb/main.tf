@@ -20,7 +20,6 @@ resource "google_compute_region_network_endpoint_group" "client_serverless_neg" 
   }
 }
 
-
 resource "google_compute_url_map" "lb-server-client-map" {
   name            = var.name
   default_service = module.lb-http.backend_services["default"].self_link
@@ -46,7 +45,7 @@ resource "google_compute_url_map" "lb-server-client-map" {
 resource "google_compute_url_map" "https_redirect" {
   default_url_redirect {
     https_redirect         = true
-    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+    redirect_response_code = "FOUND"
     strip_query            = false
   }
 
@@ -71,7 +70,7 @@ module "lb-http" {
   backends = {
     default = {
       description = "Cloud backend for directing requests to the react backend"
-      groups      = [
+      groups = [
         {
           group = google_compute_region_network_endpoint_group.client_serverless_neg.id
         }
@@ -87,7 +86,7 @@ module "lb-http" {
     }
     server = {
       description = "Cloud backend for directing to a NEG for the restful API (server)"
-      groups      = [
+      groups = [
         {
           group = google_compute_region_network_endpoint_group.serverless_neg.id
         }

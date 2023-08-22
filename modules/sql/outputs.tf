@@ -18,3 +18,7 @@ output "db_name" {
 output "db_host" {
   value = google_sql_database_instance.default.private_ip_address
 }
+
+#output "vpc_connector" {
+#  value = google_service_networking_connection.sql_vpc_connection.id
+#}

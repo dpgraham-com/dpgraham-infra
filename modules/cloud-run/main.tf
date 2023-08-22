@@ -3,6 +3,14 @@ locals {
   max_instance_count = var.environment == "prod" ? 3 : 1
 }
 
+resource "google_vpc_access_connector" "vpc_connector" {
+  name          = "${local.name}-vpc-connector"
+  project       = var.project
+  network       = var.vpc
+  region        = var.region
+  ip_cidr_range = var.connector_cidr
+}
+
 resource "google_cloud_run_v2_service" "default" {
   name     = local.name
   location = var.region
@@ -25,7 +33,7 @@ resource "google_cloud_run_v2_service" "default" {
       }
     }
     vpc_access {
-      connector = var.vpc_connector
+      connector = google_vpc_access_connector.vpc_connector.id
       egress    = "ALL_TRAFFIC"
     }
     scaling {
@@ -48,4 +56,5 @@ resource "google_cloud_run_service_iam_policy" "no_auth" {
   service  = google_cloud_run_v2_service.default.name
 
   policy_data = data.google_iam_policy.no_auth.policy_data
+  depends_on  = [google_cloud_run_v2_service.default, data.google_iam_policy.no_auth]
 }

@@ -4,9 +4,13 @@ variable "name" {
 }
 
 variable "project" {
-  default     = "dpgraham"
   type        = string
   description = "The project ID"
+}
+
+variable "connector_cidr" {
+  type        = string
+  description = "The CIDR range of the VPC connector"
 }
 
 variable "region" {
@@ -34,10 +38,15 @@ variable "image" {
   description = "The container image, located on GCP artifact registry to use"
 }
 
-variable "vpc_connector" {
+variable "vpc" {
+  description = "The ID of the VPC to deploy to"
   type        = string
-  description = "The ID of the VPC connector to use"
 }
+
+#variable "vpc_connector" {
+#  type        = string
+#  description = "The ID of the VPC connector to use"
+#}
 
 variable "env" {
   type = list(object({

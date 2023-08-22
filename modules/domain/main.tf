@@ -27,7 +27,7 @@ resource "google_dns_record_set" "dpgraham_com_record_set" {
   managed_zone = google_dns_managed_zone.dpgraham_com.name
   type         = "A"
   ttl          = 300
-  rrdatas      = [
+  rrdatas = [
     var.ipv4_address
   ]
 }

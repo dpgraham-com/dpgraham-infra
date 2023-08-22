@@ -57,3 +57,9 @@ variable "client_image_name" {
   type        = string
   default     = "dpgraham-client"
 }
+
+variable "domain" {
+  description = "The domain name to use for the application"
+  type        = string
+  default     = "dev.dpgraham.com"
+}
