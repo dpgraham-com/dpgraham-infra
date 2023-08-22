@@ -1,21 +1,21 @@
-name: Terraform Apply
+name: Terraform Apply Development
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'prod/**'
+      - 'dev/'
 
 defaults:
   run:
-    working-directory: ./prod
+    working-directory: ./dev
 
 jobs:
   terraform_apply:
     if: github.repository == 'dpgraham-com/dpgraham-infra'
     name: Terraform Apply
-    environment: staging
+    environment: development
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,13 +24,16 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      - name: Authenticate Google Cloud
+        uses: google-github-actions/auth@v1
+        id: auth
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.SA_EMAIL }}
+
       - name: Terraform Init
         run: terraform init -input=false -no-color
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_TERRAFORM_KEY }}
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_TERRAFORM_KEY }}
 

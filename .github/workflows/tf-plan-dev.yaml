@@ -1,13 +1,13 @@
-name: "Terraform Plan"
+name: Terraform Plan Development Environment
 
 on:
   pull_request:
     paths:
-      - 'prod/**'
+      - 'dev/**'
 
 defaults:
   run:
-    working-directory: ./prod
+    working-directory: ./dev
 permissions:
   pull-requests: write
 
@@ -15,7 +15,7 @@ jobs:
   terraform_plan:
     if: github.repository == 'dpgraham-com/dpgraham-infra'
     name: Terraform Plan
-    environment: staging
+    environment: development
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,16 +27,19 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      - name: Authenticate Google Cloud
+        uses: google-github-actions/auth@v1
+        id: auth
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.SA_EMAIL }}
+
       - name: Terraform Init
         run: terraform init -input=false -no-color
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_TERRAFORM_KEY }}
 
       - name: Terraform Plan
         id: plan
         run: terraform plan -input=false -no-color -out=tfplan
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_TERRAFORM_KEY }}
 
       - name: Comment on PR
         uses: actions/github-script@v6

@@ -1,22 +1,25 @@
-name: Terraform Lint
+name: Lint and validate Development Environment
 
 on:
   push:
-#  pull_request:
-#    branches:
-#      - main
-#    paths:
-#      - "modules/**"
-#      - "global/**"
-#      - "prod/**"
-#      - "dev/**"
+    paths:
+      - "dev/**/*.tf"
+  pull_request:
+    paths:
+      - "dev/**/*.tf"
+
 
 jobs:
   check_fmt:
+    environment: development
+    defaults:
+      run:
+        working-directory: ./dev
     name: Check Terraform Formatting
     permissions:
       contents: read
       pull-requests: write
+      id-token: 'write'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,11 +28,18 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      - name: Authenticate Google Cloud
+        uses: google-github-actions/auth@v1
+        id: auth
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.SA_EMAIL }}
+
       - name: Terraform Init
         run: terraform init -input=false -no-color
 
       - name: Terraform Format
-        run: terraform fmt -check
+        run: terraform fmt -check -recursive
 
       - name: Terraform Validate
         run: terraform validate

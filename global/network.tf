@@ -100,16 +100,16 @@ resource "google_compute_subnetwork" "subnet_prod_central1" {
 
 # Development and non-prod organization level shared VPC
 module "vpc-dev-shared" {
-  source         = "terraform-google-modules/network/google"
-  version        = "~> 5.0"
-  project_id     = module.dpgraham-vpc-host-nonprod.project_id
-  network_name   = "vpc-dev-shared"
+  source       = "terraform-google-modules/network/google"
+  version      = "~> 5.0"
+  project_id   = module.dpgraham-vpc-host-nonprod.project_id
+  network_name = "vpc-dev-shared"
   # we define subnets in separate resource blocks below
-  subnets        = []
+  subnets = []
   firewall_rules = [
     {
-      name       = "serverless-to-vpc-connector"
-      direction  = "INGRESS"
+      name      = "serverless-to-vpc-connector"
+      direction = "INGRESS"
       log_config = {
         metadata = "INCLUDE_ALL_METADATA"
       }
@@ -136,8 +136,8 @@ module "vpc-dev-shared" {
       ]
     },
     {
-      name       = "vpc-connector-to-serverless"
-      direction  = "EGRESS"
+      name      = "vpc-connector-to-serverless"
+      direction = "EGRESS"
       log_config = {
         metadata = "INCLUDE_ALL_METADATA"
       }
@@ -165,8 +165,8 @@ module "vpc-dev-shared" {
       ]
     },
     {
-      name       = "vpc-connector-health-checks"
-      direction  = "INGRESS"
+      name      = "vpc-connector-health-checks"
+      direction = "INGRESS"
       log_config = {
         metadata = "INCLUDE_ALL_METADATA"
       }
@@ -187,9 +187,9 @@ module "vpc-dev-shared" {
       ]
     },
     {
-      name       = "vpc-dev-shared-allow-icmp"
-      direction  = "INGRESS"
-      priority   = 10000
+      name      = "vpc-dev-shared-allow-icmp"
+      direction = "INGRESS"
+      priority  = 10000
       log_config = {
         metadata = "INCLUDE_ALL_METADATA"
       }
@@ -207,9 +207,9 @@ module "vpc-dev-shared" {
       ]
     },
     {
-      name       = "vpc-dev-shared-allow-ssh"
-      direction  = "INGRESS"
-      priority   = 10000
+      name      = "vpc-dev-shared-allow-ssh"
+      direction = "INGRESS"
+      priority  = 10000
       log_config = {
         metadata = "INCLUDE_ALL_METADATA"
       }
@@ -227,9 +227,9 @@ module "vpc-dev-shared" {
       ]
     },
     {
-      name       = "vpc-dev-shared-allow-rdp"
-      direction  = "INGRESS"
-      priority   = 10000
+      name      = "vpc-dev-shared-allow-rdp"
+      direction = "INGRESS"
+      priority  = 10000
       log_config = {
         metadata = "INCLUDE_ALL_METADATA"
       }

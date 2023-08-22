@@ -70,7 +70,7 @@ module "lb-http" {
   backends = {
     default = {
       description = "Cloud backend for directing requests to the react backend"
-      groups      = [
+      groups = [
         {
           group = google_compute_region_network_endpoint_group.client_serverless_neg.id
         }
@@ -86,7 +86,7 @@ module "lb-http" {
     }
     server = {
       description = "Cloud backend for directing to a NEG for the restful API (server)"
-      groups      = [
+      groups = [
         {
           group = google_compute_region_network_endpoint_group.serverless_neg.id
         }

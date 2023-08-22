@@ -23,8 +23,8 @@ provider "google" {
 # storage-component.googleapis.com
 # go to https://console.cloud.google.com/apis/dashboard to see the full list of enabled APIs
 module "apis" {
-  source   = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
-  project  = var.project
+  source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
+  project = var.project
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com",
@@ -42,7 +42,7 @@ module "vpc" {
 }
 
 module "client_artifact_repo" {
-  source     = "../modules/registry"
+  source = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "client"
   region     = var.region
@@ -50,7 +50,7 @@ module "client_artifact_repo" {
 }
 
 module "server_artifact_repo" {
-  source     = "../modules/registry"
+  source = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "server"
   region     = var.region
@@ -66,7 +66,7 @@ module "database" {
   project_id  = var.project
   vpc         = module.vpc.network
   #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
-  depends_on  = [module.apis]
+  depends_on = [module.apis]
 }
 
 module "frontend-service" {
@@ -78,7 +78,7 @@ module "frontend-service" {
   environment    = "dev"
   connector_cidr = "10.9.0.0/28"
   project        = var.project
-  env            = [
+  env = [
     {
       name  = "VITE_API_URL"
       value = "https://${var.domain}/api"
@@ -97,7 +97,7 @@ module "server-service" {
   port           = "8080"
   environment    = "dev"
   depends_on     = [module.apis]
-  env            = [
+  env = [
     {
       name  = "DB_PORT"
       value = "5432"

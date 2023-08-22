@@ -23,7 +23,7 @@ module "serverless_connector" {
   source  = "terraform-google-modules/network/google//modules/vpc-serverless-connector-beta"
   version = "~> 7.3"
 
-  project_id     = var.project_id
+  project_id = var.project_id
   vpc_connectors = [
     {
       name            = "frontend-serverless"
@@ -47,7 +47,7 @@ module "vpc" {
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = false
   #  ToDo, allows creating multiple subnets
-  subnets                 = [
+  subnets = [
     {
       subnet_name   = "subnet-${var.region}-1"
       subnet_ip     = "10.1.1.0/24"
