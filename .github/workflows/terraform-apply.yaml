@@ -13,6 +13,7 @@ defaults:
 
 jobs:
   terraform_apply:
+    if: github.repository == 'dpgraham-com/dpgraham-infra'
     name: Terraform Apply
     environment: staging
     runs-on: ubuntu-latest
