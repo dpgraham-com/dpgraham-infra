@@ -44,6 +44,7 @@ module "developers-folders-dev" {
     "roles/container.admin" = [
       "group:gcp-developers@dpgraham.com",
     ]
+
   }
 }
 
@@ -73,6 +74,9 @@ module "devops-folder-dev" {
       "group:gcp-devops@${var.primary_domain}",
     ]
     "roles/editor" = [
+      "group:gcp-devops@${var.primary_domain}",
+    ]
+    "roles/run.developer" = [
       "group:gcp-devops@${var.primary_domain}",
     ]
   }
