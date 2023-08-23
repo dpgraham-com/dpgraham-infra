@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "google" {
-  project = var.project
+  project = var.project_id
   region  = var.region
   zone    = "us-east1-b"
 }
@@ -24,7 +24,7 @@ provider "google" {
 # go to https://console.cloud.google.com/apis/dashboard to see the full list of enabled APIs
 module "apis" {
   source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
-  project = var.project
+  project = var.project_id
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com",
@@ -37,8 +37,18 @@ module "apis" {
 module "vpc" {
   source       = "./vpc"
   name         = "vpc"
-  environment  = "dev"
+  environment  = var.environment
   host_project = var.host_project
+}
+
+module "iam" {
+  source         = "./iam"
+  project_id     = var.project_id
+  environment    = var.environment
+  cloud_run_sa   = var.cloud_run_sa
+  cloud_infra_sa = var.cloud_infra_sa
+  github_org     = var.github_org
+  pool_id        = "github-actions"
 }
 
 module "client_artifact_repo" {
@@ -62,8 +72,8 @@ module "database" {
   name        = var.db_name
   db_password = var.db_password
   db_username = var.db_username
-  environment = "dev"
-  project_id  = var.project
+  environment = var.environment
+  project_id  = var.project_id
   vpc         = module.vpc.network
   #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
   depends_on = [module.apis]
@@ -72,12 +82,12 @@ module "database" {
 module "frontend-service" {
   source         = "../modules/cloud-run"
   name           = "client"
-  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.client_artifact_repo.location, var.project, module.client_artifact_repo.name, var.client_image_name)
+  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.client_artifact_repo.location, var.project_id, module.client_artifact_repo.name, var.client_image_name)
   vpc            = module.vpc.network
   port           = "3000"
   environment    = "dev"
   connector_cidr = "10.9.0.0/28"
-  project        = var.project
+  project        = var.project_id
   env = [
     {
       name  = "VITE_API_URL"
@@ -89,13 +99,13 @@ module "frontend-service" {
 module "server-service" {
   source = "../modules/cloud-run"
 
-  project        = var.project
+  project        = var.project_id
   connector_cidr = "10.8.0.0/28"
   name           = "server"
-  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project, module.server_artifact_repo.name, var.server_image_name)
+  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project_id, module.server_artifact_repo.name, var.server_image_name)
   vpc            = module.vpc.network
   port           = "8080"
-  environment    = "dev"
+  environment    = var.environment
   depends_on     = [module.apis]
   env = [
     {
@@ -127,10 +137,10 @@ module "server-service" {
 
 module "load_balancer" {
   source           = "../modules/global-lb"
-  name             = "${var.project}-lb"
+  name             = "${var.project_id}-lb"
   backend_service  = module.server-service.name
   frontend_service = module.frontend-service.name
-  environment      = "dev"
-  project_id       = var.project
+  environment      = var.environment
+  project_id       = var.project_id
   domain_name      = var.domain
 }
