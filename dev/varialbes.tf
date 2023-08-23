@@ -78,6 +78,7 @@ variable "cloud_infra_sa" {
 variable "cloud_run_sa" {
   description = "The username of the service account that has permissions to deploy cloud run and read/write access to Google Artifact Registry"
   type        = string
+  default     = "cloud-run-deployer"
 }
 
 variable "environment" {

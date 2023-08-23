@@ -23,8 +23,8 @@ provider "google" {
 # storage-component.googleapis.com
 # go to https://console.cloud.google.com/apis/dashboard to see the full list of enabled APIs
 module "apis" {
-  source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
-  project = var.project_id
+  source   = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
+  project  = var.project_id
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com",
@@ -41,38 +41,18 @@ module "vpc" {
   host_project = var.host_project
 }
 
-module "gh_oidc" {
-  source  = "terraform-google-modules/github-actions-runners/google//modules/gh-oidc"
-  version = "3.1.1"
-
-  project_id       = var.project_id
-  pool_id          = "github-actions-runners"
-  provider_id      = "github"
-  pool_description = "A pool of identities to be used by GitHub Actions workflow runners"
-  sa_mapping = {
-    "devops_service_account" = {
-      sa_name   = "projects/${var.project_id}/serviceAccounts/${var.cloud_infra_sa}@${var.project_id}.iam.gserviceaccount.com"
-      attribute = "attribute.repository/${var.github_org}/dpgraham-infra"
-    }
-    "cloud_run_service_account" = {
-      sa_name   = "projects/${var.project_id}/serviceAccounts/${var.cloud_run_sa}@${var.project_id}.iam.gserviceaccount.com"
-      attribute = "attribute.repository/${var.github_org}/dpgraham-client"
-    }
-    "cloud_run_service_account" = {
-      sa_name   = "projects/${var.project_id}/serviceAccounts/${var.cloud_run_sa}@${var.project_id}.iam.gserviceaccount.com"
-      attribute = "attribute.repository/${var.github_org}/dpgraham-server"
-    }
-  }
-}
-
 module "iam" {
-  source      = "./iam"
-  project_id  = var.project_id
-  environment = var.environment
+  source         = "./iam"
+  project_id     = var.project_id
+  environment    = var.environment
+  cloud_run_sa   = var.cloud_run_sa
+  cloud_infra_sa = var.cloud_infra_sa
+  github_org     = var.github_org
+  pool_id        = "github-actions"
 }
 
 module "client_artifact_repo" {
-  source = "../modules/registry"
+  source     = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "client"
   region     = var.region
@@ -80,7 +60,7 @@ module "client_artifact_repo" {
 }
 
 module "server_artifact_repo" {
-  source = "../modules/registry"
+  source     = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "server"
   region     = var.region
@@ -96,7 +76,7 @@ module "database" {
   project_id  = var.project_id
   vpc         = module.vpc.network
   #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
-  depends_on = [module.apis]
+  depends_on  = [module.apis]
 }
 
 module "frontend-service" {
@@ -108,7 +88,7 @@ module "frontend-service" {
   environment    = "dev"
   connector_cidr = "10.9.0.0/28"
   project        = var.project_id
-  env = [
+  env            = [
     {
       name  = "VITE_API_URL"
       value = "https://${var.domain}/api"
@@ -127,7 +107,7 @@ module "server-service" {
   port           = "8080"
   environment    = var.environment
   depends_on     = [module.apis]
-  env = [
+  env            = [
     {
       name  = "DB_PORT"
       value = "5432"
