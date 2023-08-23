@@ -23,8 +23,8 @@ provider "google" {
 # storage-component.googleapis.com
 # go to https://console.cloud.google.com/apis/dashboard to see the full list of enabled APIs
 module "apis" {
-  source   = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
-  project  = var.project_id
+  source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
+  project = var.project_id
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com",
@@ -37,7 +37,7 @@ module "apis" {
 module "vpc" {
   source       = "./vpc"
   name         = "vpc"
-  environment  = "dev"
+  environment  = var.environment
   host_project = var.host_project
 }
 
@@ -45,19 +45,34 @@ module "gh_oidc" {
   source  = "terraform-google-modules/github-actions-runners/google//modules/gh-oidc"
   version = "3.1.1"
 
-  project_id  = var.project_id
-  pool_id     = "example-pool"
-  provider_id = "example-gh-provider"
-  sa_mapping  = {
-    "foo-service-account" = {
-      sa_name   = "projects/my-project/serviceAccounts/foo-service-account@my-project.iam.gserviceaccount.com"
-      attribute = "attribute.repository/${var.github_org}/<repo>"
+  project_id       = var.project_id
+  pool_id          = "github-actions-runners"
+  provider_id      = "github"
+  pool_description = "A pool of identities to be used by GitHub Actions workflow runners"
+  sa_mapping = {
+    "devops_service_account" = {
+      sa_name   = "projects/${var.project_id}/serviceAccounts/${var.cloud_infra_sa}@${var.project_id}.iam.gserviceaccount.com"
+      attribute = "attribute.repository/${var.github_org}/dpgraham-infra"
+    }
+    "cloud_run_service_account" = {
+      sa_name   = "projects/${var.project_id}/serviceAccounts/${var.cloud_run_sa}@${var.project_id}.iam.gserviceaccount.com"
+      attribute = "attribute.repository/${var.github_org}/dpgraham-client"
+    }
+    "cloud_run_service_account" = {
+      sa_name   = "projects/${var.project_id}/serviceAccounts/${var.cloud_run_sa}@${var.project_id}.iam.gserviceaccount.com"
+      attribute = "attribute.repository/${var.github_org}/dpgraham-server"
     }
   }
 }
 
+module "iam" {
+  source      = "./iam"
+  project_id  = var.project_id
+  environment = var.environment
+}
+
 module "client_artifact_repo" {
-  source     = "../modules/registry"
+  source = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "client"
   region     = var.region
@@ -65,7 +80,7 @@ module "client_artifact_repo" {
 }
 
 module "server_artifact_repo" {
-  source     = "../modules/registry"
+  source = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "server"
   region     = var.region
@@ -77,11 +92,11 @@ module "database" {
   name        = var.db_name
   db_password = var.db_password
   db_username = var.db_username
-  environment = "dev"
+  environment = var.environment
   project_id  = var.project_id
   vpc         = module.vpc.network
   #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
-  depends_on  = [module.apis]
+  depends_on = [module.apis]
 }
 
 module "frontend-service" {
@@ -93,7 +108,7 @@ module "frontend-service" {
   environment    = "dev"
   connector_cidr = "10.9.0.0/28"
   project        = var.project_id
-  env            = [
+  env = [
     {
       name  = "VITE_API_URL"
       value = "https://${var.domain}/api"
@@ -110,9 +125,9 @@ module "server-service" {
   image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project_id, module.server_artifact_repo.name, var.server_image_name)
   vpc            = module.vpc.network
   port           = "8080"
-  environment    = "dev"
+  environment    = var.environment
   depends_on     = [module.apis]
-  env            = [
+  env = [
     {
       name  = "DB_PORT"
       value = "5432"
@@ -145,7 +160,7 @@ module "load_balancer" {
   name             = "${var.project_id}-lb"
   backend_service  = module.server-service.name
   frontend_service = module.frontend-service.name
-  environment      = "dev"
+  environment      = var.environment
   project_id       = var.project_id
   domain_name      = var.domain
 }

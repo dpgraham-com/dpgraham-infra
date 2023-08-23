@@ -69,3 +69,19 @@ variable "github_org" {
   type        = string
   default     = "dpgraham-com"
 }
+
+variable "cloud_infra_sa" {
+  description = "The username of the service account that has permissions to provision cloud infrastructure"
+  type        = string
+}
+
+variable "cloud_run_sa" {
+  description = "The username of the service account that has permissions to deploy cloud run and read/write access to Google Artifact Registry"
+  type        = string
+}
+
+variable "environment" {
+  description = "The environment to deploy to"
+  type        = string
+  default     = "dev"
+}
