@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "google" {
-  project = var.project
+  project = var.project_id
   region  = var.region
   zone    = "us-east1-b"
 }
@@ -23,8 +23,8 @@ provider "google" {
 # storage-component.googleapis.com
 # go to https://console.cloud.google.com/apis/dashboard to see the full list of enabled APIs
 module "apis" {
-  source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
-  project = var.project
+  source   = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
+  project  = var.project_id
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com",
@@ -41,8 +41,23 @@ module "vpc" {
   host_project = var.host_project
 }
 
+module "gh_oidc" {
+  source  = "terraform-google-modules/github-actions-runners/google//modules/gh-oidc"
+  version = "3.1.1"
+
+  project_id  = var.project_id
+  pool_id     = "example-pool"
+  provider_id = "example-gh-provider"
+  sa_mapping  = {
+    "foo-service-account" = {
+      sa_name   = "projects/my-project/serviceAccounts/foo-service-account@my-project.iam.gserviceaccount.com"
+      attribute = "attribute.repository/${var.github_org}/<repo>"
+    }
+  }
+}
+
 module "client_artifact_repo" {
-  source = "../modules/registry"
+  source     = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "client"
   region     = var.region
@@ -50,7 +65,7 @@ module "client_artifact_repo" {
 }
 
 module "server_artifact_repo" {
-  source = "../modules/registry"
+  source     = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "server"
   region     = var.region
@@ -63,22 +78,22 @@ module "database" {
   db_password = var.db_password
   db_username = var.db_username
   environment = "dev"
-  project_id  = var.project
+  project_id  = var.project_id
   vpc         = module.vpc.network
   #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
-  depends_on = [module.apis]
+  depends_on  = [module.apis]
 }
 
 module "frontend-service" {
   source         = "../modules/cloud-run"
   name           = "client"
-  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.client_artifact_repo.location, var.project, module.client_artifact_repo.name, var.client_image_name)
+  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.client_artifact_repo.location, var.project_id, module.client_artifact_repo.name, var.client_image_name)
   vpc            = module.vpc.network
   port           = "3000"
   environment    = "dev"
   connector_cidr = "10.9.0.0/28"
-  project        = var.project
-  env = [
+  project        = var.project_id
+  env            = [
     {
       name  = "VITE_API_URL"
       value = "https://${var.domain}/api"
@@ -89,15 +104,15 @@ module "frontend-service" {
 module "server-service" {
   source = "../modules/cloud-run"
 
-  project        = var.project
+  project        = var.project_id
   connector_cidr = "10.8.0.0/28"
   name           = "server"
-  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project, module.server_artifact_repo.name, var.server_image_name)
+  image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.server_artifact_repo.location, var.project_id, module.server_artifact_repo.name, var.server_image_name)
   vpc            = module.vpc.network
   port           = "8080"
   environment    = "dev"
   depends_on     = [module.apis]
-  env = [
+  env            = [
     {
       name  = "DB_PORT"
       value = "5432"
@@ -127,10 +142,10 @@ module "server-service" {
 
 module "load_balancer" {
   source           = "../modules/global-lb"
-  name             = "${var.project}-lb"
+  name             = "${var.project_id}-lb"
   backend_service  = module.server-service.name
   frontend_service = module.frontend-service.name
   environment      = "dev"
-  project_id       = var.project
+  project_id       = var.project_id
   domain_name      = var.domain
 }

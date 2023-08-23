@@ -5,7 +5,7 @@ variable "project_name" {
   default     = "dpgraham-dev"
 }
 
-variable "project" {
+variable "project_id" {
   description = "The project ID to deploy to"
   type        = string
   default     = "dpgraham-com-dev"
@@ -62,4 +62,10 @@ variable "domain" {
   description = "The domain name to use for the application"
   type        = string
   default     = "dev.dpgraham.com"
+}
+
+variable "github_org" {
+  description = "The name of the GitHub organization to use for the application"
+  type        = string
+  default     = "dpgraham-com"
 }
