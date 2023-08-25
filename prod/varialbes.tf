@@ -2,19 +2,19 @@
 variable "project_name" {
   description = "The project ID to deploy to"
   type        = string
-  default     = "dpgraham-dev"
+  default     = "dpgraham-prod"
 }
 
 variable "project_id" {
   description = "The project ID to deploy to"
   type        = string
-  default     = "dpgraham-com-dev"
+  default     = "dpgraham-com-prod"
 }
 
 variable "host_project" {
   description = "The project ID to deploy to"
   type        = string
-  default     = "dpgraham-vpc-host-nonprod"
+  default     = "dpgraham-vpc-host-prod"
 }
 
 variable "region" {
@@ -43,7 +43,7 @@ variable "db_password" {
 variable "artifact_repo" {
   description = "The ID of the artifact repository"
   type        = string
-  default     = "dpgraham-com-dev"
+  default     = "dpgraham-com"
 }
 
 variable "server_image_name" {
@@ -61,7 +61,7 @@ variable "client_image_name" {
 variable "domain" {
   description = "The domain name to use for the application"
   type        = string
-  default     = "dev.dpgraham.com"
+  default     = "dpgraham.com"
 }
 
 variable "github_org" {
@@ -84,5 +84,5 @@ variable "cloud_run_sa" {
 variable "environment" {
   description = "The environment to deploy to"
   type        = string
-  default     = "dev"
+  default     = "prod"
 }
