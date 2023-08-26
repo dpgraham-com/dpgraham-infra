@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "tf-state-dpgraham-cs-host-a129ed3bccf04a1abf8760"
-    prefix = "terraform/${var.environment}"
+    prefix = "terraform/prod"
   }
   required_providers {
     google = {
@@ -35,10 +35,13 @@ module "apis" {
 }
 
 module "vpc" {
-  source       = "./vpc"
-  name         = "vpc"
-  environment  = var.environment
-  host_project = var.host_project
+  source          = "./vpc"
+  name            = "vpc"
+  environment     = var.environment
+  host_project    = var.host_project
+  shared_vpc_name = "vpc-prod-shared"
+  depends_on      = [module.apis]
+  project_id      = var.project_id
 }
 
 module "iam" {
@@ -49,6 +52,7 @@ module "iam" {
   cloud_infra_sa = var.cloud_infra_sa
   github_org     = var.github_org
   pool_id        = "github-actions"
+  depends_on     = [module.apis]
 }
 
 module "client_artifact_repo" {
@@ -85,7 +89,7 @@ module "frontend-service" {
   image          = format("%s-docker.pkg.dev/%s/%s/%s:latest", module.client_artifact_repo.location, var.project_id, module.client_artifact_repo.name, var.client_image_name)
   vpc            = module.vpc.network
   port           = "3000"
-  environment    = "dev"
+  environment    = var.environment
   connector_cidr = "10.9.0.0/28"
   project        = var.project_id
   env            = [

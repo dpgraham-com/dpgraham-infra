@@ -1,20 +1,21 @@
 locals {
-  name = var.environment == "prod" ? "${var.name}-prod" : "${var.name}-dev"
+  name        = var.environment == "prod" ? "${var.name}-prod" : "${var.name}-dev"
+  subnet_name = var.environment == "prod" ? "subnet-prod-east1" : "subnet-dev-east1"
 }
 
 data "google_compute_network" "shared_vpc" {
-  name    = "vpc-dev-shared"
-  project = "dpgraham-vpc-host-nonprod"
+  name    = var.shared_vpc_name
+  project = var.host_project
 }
 
 data "google_compute_subnetwork" "shared_vpc_subnet" {
-  name    = "subnet-dev-east1"
+  name    = local.subnet_name
   region  = "us-east1"
   project = var.host_project
 }
 
 data "google_compute_subnetwork" "shared_vpc_serverless_subnet" {
-  name    = "subnet-dev-east1-serverless"
+  name    = "${local.subnet_name}-serverless"
   region  = "us-east1"
   project = var.host_project
 }
@@ -23,7 +24,7 @@ module "serverless_connector" {
   source  = "terraform-google-modules/network/google//modules/vpc-serverless-connector-beta"
   version = "~> 7.3"
 
-  project_id = var.project_id
+  project_id     = var.project_id
   vpc_connectors = [
     {
       name            = "frontend-serverless"
@@ -47,7 +48,7 @@ module "vpc" {
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = false
   #  ToDo, allows creating multiple subnets
-  subnets = [
+  subnets                 = [
     {
       subnet_name   = "subnet-${var.region}-1"
       subnet_ip     = "10.1.1.0/24"
