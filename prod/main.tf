@@ -30,7 +30,8 @@ module "apis" {
     "sqladmin.googleapis.com",
     "artifactregistry.googleapis.com",
     "run.googleapis.com",
-    "vpcaccess.googleapis.com"
+    "vpcaccess.googleapis.com",
+    "iamcredentials.googleapis.com"
   ]
 }
 
@@ -110,7 +111,7 @@ module "server-service" {
   vpc            = module.vpc.network
   port           = "8080"
   environment    = var.environment
-  depends_on     = [module.apis]
+  depends_on     = [module.apis, module.database]
   env            = [
     {
       name  = "DB_PORT"
