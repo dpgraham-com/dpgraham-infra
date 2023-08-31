@@ -82,6 +82,26 @@ module "devops-folder-dev" {
   }
 }
 
+
+module "devops-folder-prod" {
+  source  = "terraform-google-modules/iam/google//modules/folders_iam"
+  version = "~> 7.4"
+
+  folders = [
+    module.envs.ids["Production"],
+  ]
+  bindings = {
+    "roles/cloudsql.admin" = [
+      "group:gcp-devops@${var.primary_domain}",
+    ]
+    "roles/editor" = [
+      "group:gcp-devops@${var.primary_domain}",
+    ]
+    "roles/run.developer" = [
+      "group:gcp-devops@${var.primary_domain}",
+    ]
+  }
+}
 ## IAM permissions related to the logging project
 
 #module "projects-iam-2-loggingviewer" {
