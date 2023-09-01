@@ -5,7 +5,7 @@ locals {
 
 module "service_accounts" {
   source  = "terraform-google-modules/service-accounts/google"
-  version = "~> 3.0"
+  version = "~> 4.2"
 
   project_id   = var.project_id
   names        = ["${var.cloud_run_sa}${local.env_suffix}"]
