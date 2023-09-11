@@ -42,14 +42,13 @@ module "vpc" {
 }
 
 module "iam" {
-  source            = "./iam"
-  project_id        = var.project_id
-  environment       = var.environment
-  cloud_run_sa      = var.cloud_run_sa
-  cloud_infra_sa_id = var.cloud_infra_sa_id
-  cloud_infra_sa    = var.cloud_infra_sa
-  github_org        = var.github_org
-  pool_id           = "github-actions"
+  source         = "./iam"
+  project_id     = var.project_id
+  environment    = var.environment
+  cloud_run_sa   = var.cloud_run_sa
+  cloud_infra_sa = var.cloud_infra_sa
+  github_org     = var.github_org
+  pool_id        = "github-actions"
 }
 
 module "client_artifact_repo" {

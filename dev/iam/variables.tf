@@ -17,11 +17,6 @@ variable "cloud_infra_sa" {
   type        = string
 }
 
-variable "cloud_infra_sa_id" {
-  description = "The unique ID of the service account that has permissions to provision cloud infrastructure"
-  type        = string
-}
-
 variable "cloud_run_sa" {
   description = "The username of the service account that has permissions to deploy cloud run and read/write access to Google Artifact Registry"
   type        = string
