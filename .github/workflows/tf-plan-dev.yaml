@@ -1,6 +1,7 @@
 name: Terraform Plan Development Environment
 
 on:
+  push:
   pull_request:
     branches:
       - main
