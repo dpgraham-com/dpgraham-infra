@@ -19,25 +19,6 @@ data "google_compute_subnetwork" "shared_vpc_serverless_subnet" {
   project = var.host_project
 }
 
-module "serverless_connector" {
-  source  = "terraform-google-modules/network/google//modules/vpc-serverless-connector-beta"
-  version = "~> 7.3"
-
-  project_id = var.project_id
-  vpc_connectors = [
-    {
-      name            = "frontend-serverless"
-      region          = "us-east1"
-      subnet_name     = data.google_compute_subnetwork.shared_vpc_serverless_subnet.name
-      host_project_id = var.host_project
-      machine_type    = "e2-micro"
-      min_instances   = 2
-      max_instances   = 10
-      max_throughput  = 1000
-    }
-  ]
-  depends_on = [data.google_compute_subnetwork.shared_vpc_serverless_subnet]
-}
 
 module "vpc" {
   source                  = "terraform-google-modules/network/google"

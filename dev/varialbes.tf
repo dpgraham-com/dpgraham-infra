@@ -73,6 +73,7 @@ variable "github_org" {
 variable "cloud_infra_sa" {
   description = "The username of the service account that has permissions to provision cloud infrastructure"
   type        = string
+  default     = "infra-deployer"
 }
 
 variable "cloud_run_sa" {

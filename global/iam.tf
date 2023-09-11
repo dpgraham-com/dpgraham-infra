@@ -10,8 +10,16 @@
 # Just remember that roles are inherited, if we assign a role to a folder,
 # it will be inherited by all projects and resources under that folder
 
-# Not all polies are managed by terraform, such as billing account permissions and organization ownership
+# Not all polices are managed by terraform, such as billing account permissions and organization ownership
 # These are managed manually to ensure that we don't accidentally remove them with `terraform destroy`
+
+resource "google_service_account" "cloud_infra_sa_dev" {
+  project      = module.dpgraham-com-dev.project_id
+  account_id   = "${var.cloud_infra_sa}-dev"
+  display_name = "Cloud Infra Service Account for dev environment"
+  description  = "Service account used by automation to provision cloud resources"
+}
+
 
 module "developer-folder-nonprod" {
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
@@ -44,7 +52,6 @@ module "developers-folders-dev" {
     "roles/container.admin" = [
       "group:gcp-developers@dpgraham.com",
     ]
-
   }
 }
 
@@ -57,7 +64,8 @@ module "service_accounts_nonprod_shared_vpc_connectors" {
   bindings = {
     "roles/compute.networkUser" = [
       "serviceAccount:service-${var.dpgraham_dev_project_number}@gcp-sa-vpcaccess.iam.gserviceaccount.com",
-      "serviceAccount:${var.dpgraham_dev_project_number}@cloudservices.gserviceaccount.com"
+      "serviceAccount:${var.dpgraham_dev_project_number}@cloudservices.gserviceaccount.com",
+      "serviceAccount:${google_service_account.cloud_infra_sa_dev.email}",
     ]
   }
 }
@@ -72,12 +80,20 @@ module "devops-folder-dev" {
   bindings = {
     "roles/cloudsql.admin" = [
       "group:gcp-devops@${var.primary_domain}",
+      "serviceAccount:${google_service_account.cloud_infra_sa_dev.email}",
     ]
     "roles/editor" = [
       "group:gcp-devops@${var.primary_domain}",
+      "serviceAccount:${google_service_account.cloud_infra_sa_dev.email}",
     ]
     "roles/run.developer" = [
       "group:gcp-devops@${var.primary_domain}",
+    ]
+    "roles/compute.networkAdmin" = [
+      "serviceAccount:${google_service_account.cloud_infra_sa_dev.email}",
+    ]
+    "roles/iam.workloadIdentityUser" = [
+      "serviceAccount:${google_service_account.cloud_infra_sa_dev.email}",
     ]
   }
 }

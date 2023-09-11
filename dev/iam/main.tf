@@ -3,10 +3,15 @@ locals {
   cloud_run_sa = var.environment == "prod" ? var.cloud_run_sa : "${var.cloud_run_sa}${local.env_suffix}"
 }
 
+data "google_service_account" "cloud_infra_sa" {
+  account_id = "infra-deployer-dev@dpgraham-com-dev.iam.gserviceaccount.com"
+}
+
 resource "google_service_account" "cloud_run_sa" {
   project    = var.project_id
   account_id = "${var.cloud_run_sa}${local.env_suffix}"
 }
+
 
 resource "google_project_iam_member" "run_developer" {
   project = var.project_id
@@ -41,5 +46,13 @@ module "gh_oidc" {
       sa_name   = google_service_account.cloud_run_sa.name
       attribute = "attribute.repository/${var.github_org}/dpgraham-client"
     }
+    "infra_editor_service_account" = {
+      sa_name   = data.google_service_account.cloud_infra_sa.name
+      attribute = "attribute.repository/${var.github_org}/dpgraham-infra"
+    }
   }
+  depends_on = [
+    google_service_account.cloud_run_sa,
+    data.google_service_account.cloud_infra_sa,
+  ]
 }

@@ -1,6 +1,7 @@
 locals {
-  name               = var.environment == "prod" ? var.name : "${var.name}-dev"
-  max_instance_count = var.environment == "prod" ? 3 : 1
+  name                   = var.environment == "prod" ? var.name : "${var.name}-dev"
+  max_instance_count     = var.environment == "prod" ? 3 : 1
+  connector_machine_type = var.environment == "prod" ? "e2-micro" : "f1-micro"
 }
 
 resource "google_vpc_access_connector" "vpc_connector" {
@@ -9,6 +10,7 @@ resource "google_vpc_access_connector" "vpc_connector" {
   network       = var.vpc
   region        = var.region
   ip_cidr_range = var.connector_cidr
+  machine_type  = local.connector_machine_type
 }
 
 resource "google_cloud_run_v2_service" "default" {

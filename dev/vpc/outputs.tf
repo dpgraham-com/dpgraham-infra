@@ -10,6 +10,6 @@ output "shared_vpc" {
   value = data.google_compute_network.shared_vpc.id
 }
 
-output "serverless_vpc_connector" {
-  value = sort(module.serverless_connector.connector_ids)[0]
-}
+#output "serverless_vpc_connector" {
+#  value = sort(module.serverless_connector.connector_ids)[0]
+#}
