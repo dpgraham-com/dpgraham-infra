@@ -92,6 +92,9 @@ module "devops-folder-dev" {
     "roles/compute.networkAdmin" = [
       "serviceAccount:${google_service_account.cloud_infra_sa_dev.email}",
     ]
+    "roles/iam.workloadIdentityUser" = [
+      "serviceAccount:${google_service_account.cloud_infra_sa_dev.email}",
+    ]
   }
 }
 
