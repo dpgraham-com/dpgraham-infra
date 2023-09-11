@@ -8,6 +8,7 @@ resource "google_service_account" "cloud_run_sa" {
   account_id = "${var.cloud_run_sa}${local.env_suffix}"
 }
 
+
 resource "google_project_iam_member" "run_developer" {
   project = var.project_id
   role    = "roles/run.developer"
@@ -36,10 +37,18 @@ module "gh_oidc" {
   pool_id          = var.pool_id
   provider_id      = "github"
   pool_description = "A pool of identities to be used by GitHub Actions workflow runners"
-  sa_mapping = {
+  sa_mapping       = {
     "cloud_run_service_account" = {
       sa_name   = google_service_account.cloud_run_sa.name
       attribute = "attribute.repository/${var.github_org}/dpgraham-client"
     }
+    #    "infra_editor_service_account" = {
+    #      sa_name   = google_service_account.cloud_infra_sa.name
+    #      attribute = "attribute.repository/${var.github_org}/dpgraham-infra"
+    #    }
   }
+  depends_on = [
+    google_service_account.cloud_run_sa,
+    #    google_service_account.cloud_infra_sa,
+  ]
 }

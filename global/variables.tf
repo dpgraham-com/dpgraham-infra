@@ -37,3 +37,9 @@ variable "prod_project_id" {
   type        = string
   default     = "dpgraham-com-prod"
 }
+
+variable "cloud_infra_sa" {
+  description = "The service account for the cloud infra project"
+  type        = string
+  default     = "infra-deployer"
+}
