@@ -26,7 +26,7 @@ module "developer-folder-nonprod" {
   version = "~> 7.4"
 
   folders = [
-    module.envs.ids["Non-Production"],
+    module.folders.ids["Non-Production"],
   ]
   bindings = {
     "roles/compute.instanceAdmin.v1" = [
@@ -43,7 +43,7 @@ module "developers-folders-dev" {
   version = "~> 7.4"
 
   folders = [
-    module.envs.ids["Development"],
+    module.folders.ids["Development"],
   ]
   bindings = {
     "roles/compute.instanceAdmin.v1" = [
@@ -75,7 +75,7 @@ module "devops-folder-dev" {
   version = "~> 7.4"
 
   folders = [
-    module.envs.ids["Development"],
+    module.folders.ids["Development"],
   ]
   bindings = {
     "roles/cloudsql.admin" = [
@@ -104,7 +104,7 @@ module "devops-folder-prod" {
   version = "~> 7.4"
 
   folders = [
-    module.envs.ids["Production"],
+    module.folders.ids["Production"],
   ]
   bindings = {
     "roles/cloudsql.admin" = [
