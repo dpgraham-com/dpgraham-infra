@@ -118,6 +118,33 @@ module "devops-folder-prod" {
     ]
   }
 }
+
+
+module "gh_oidc_dev" {
+  source  = "terraform-google-modules/github-actions-runners/google//modules/gh-oidc"
+  version = "3.1.1"
+
+  project_id       = module.dpgraham-com-dev.project_id
+  pool_id          = var.pool_id
+  provider_id      = "github"
+  pool_description = "A pool of identities to be used by GitHub Actions workflow runners"
+  sa_mapping       = {
+    #    "cloud_run_service_account" = {
+    #      sa_name   = google_service_account.cloud_run_sa.name
+    #      attribute = "attribute.repository/${var.github_org}/dpgraham-client"
+    #    }
+    "infra_editor_service_account" = {
+      sa_name   = google_service_account.cloud_infra_sa_dev.name
+      attribute = "attribute.repository/${var.github_org}/dpgraham-infra"
+    }
+  }
+  #  depends_on = [
+  #    google_service_account.cloud_infra_sa_dev
+  #    data.google_service_account.cloud_infra_sa,
+  #  ]
+}
+
+
 ## IAM permissions related to the logging project
 
 #module "projects-iam-2-loggingviewer" {
