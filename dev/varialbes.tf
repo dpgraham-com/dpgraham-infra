@@ -43,6 +43,7 @@ variable "db_password" {
 variable "resume_pdf_path" {
   description = "The path to the resume PDF file"
   type        = string
+  default     = "../content/DavidGrahamResume.pdf"
 }
 
 variable "artifact_repo" {
