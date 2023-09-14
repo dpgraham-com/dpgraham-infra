@@ -5,7 +5,7 @@ module "common" {
   version = "~> 3.2"
 
   parent = "organizations/${var.org_id}"
-  names  = [
+  names = [
     "Common",
   ]
 }
@@ -15,7 +15,7 @@ module "envs" {
   version = "~> 3.2"
 
   parent = "organizations/${var.org_id}"
-  names  = [
+  names = [
     "Production",
     "Non-Production",
     "Development",
