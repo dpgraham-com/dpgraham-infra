@@ -22,3 +22,8 @@ variable "environment" {
     error_message = "Environment must be one of [devel, prod]"
   }
 }
+
+variable "resume_path" {
+  description = "The path to the resume to upload"
+  type        = string
+}

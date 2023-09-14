@@ -20,3 +20,9 @@ resource "google_storage_default_object_access_control" "public_access" {
   role   = "READER"
   entity = "allUsers"
 }
+
+resource "google_storage_bucket_object" "resume_folder" {
+  bucket = google_storage_bucket.default.name
+  name   = "resume/resume.md"
+  source = var.resume_path
+}
