@@ -23,8 +23,8 @@ provider "google" {
 # storage-component.googleapis.com
 # go to https://console.cloud.google.com/apis/dashboard to see the full list of enabled APIs
 module "apis" {
-  source  = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
-  project = var.project_id
+  source   = "../modules/gcp-apis" # using local modules until I can these are versioned in the main branch of the repo
+  project  = var.project_id
   services = [
     "servicenetworking.googleapis.com",
     "sqladmin.googleapis.com",
@@ -52,7 +52,7 @@ module "iam" {
 }
 
 module "client_artifact_repo" {
-  source = "../modules/registry"
+  source     = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "client"
   region     = var.region
@@ -60,11 +60,18 @@ module "client_artifact_repo" {
 }
 
 module "server_artifact_repo" {
-  source = "../modules/registry"
+  source     = "../modules/registry"
   # using local modules until I can these are versioned in the main branch of the repo
   repo       = "server"
   region     = var.region
   depends_on = [module.apis]
+}
+
+module "storage" {
+  source      = "../modules/storage"
+  project_id  = var.project_id
+  environment = var.environment
+  bucket_name = "dpgraham-dev"
 }
 
 module "database" {
@@ -76,7 +83,7 @@ module "database" {
   project_id  = var.project_id
   vpc         = module.vpc.network
   #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
-  depends_on = [module.apis]
+  depends_on  = [module.apis]
 }
 
 module "frontend-service" {
@@ -88,7 +95,7 @@ module "frontend-service" {
   environment    = "dev"
   connector_cidr = "10.9.0.0/28"
   project        = var.project_id
-  env = [
+  env            = [
     {
       name  = "VITE_API_URL"
       value = "https://${var.domain}/api"
@@ -107,7 +114,7 @@ module "server-service" {
   port           = "8080"
   environment    = var.environment
   depends_on     = [module.apis]
-  env = [
+  env            = [
     {
       name  = "DB_PORT"
       value = "5432"

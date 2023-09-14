@@ -6,7 +6,7 @@ variable "bucket_name" {
 variable "location" {
   description = "The GCP region in which to create the bucket"
   type        = string
-  default     = "us-east-1"
+  default     = "US"
 }
 
 variable "project_id" {
