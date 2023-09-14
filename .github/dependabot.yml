@@ -9,12 +9,3 @@ updates:
     open-pull-requests-limit: 4
     reviewers:
       - "dpgraham4401"
-  - package-ecosystem: terraform
-    directory: /prod
-    schedule:
-      interval: monthly
-    labels:
-      - "dependencies"
-    open-pull-requests-limit: 4
-    reviewers:
-      - "dpgraham4401"
