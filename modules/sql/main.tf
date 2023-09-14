@@ -20,6 +20,9 @@ resource "google_sql_database_instance" "default" {
   name             = var.name
   project          = var.project_id
   region           = var.region
+  lifecycle {
+    ignore_changes = [settings.0.activation_policy]
+  }
 
   settings {
     activation_policy = "ALWAYS"
