@@ -72,7 +72,7 @@ module "storage" {
   project_id  = var.project_id
   environment = var.environment
   bucket_name = "dpgraham-dev"
-  resume_path = "./README.md"
+  resume_path = var.resume_pdf_path
 }
 
 module "database" {

@@ -34,7 +34,7 @@ resource "google_sql_database_instance" "default" {
         retention_unit   = "COUNT"
       }
 
-      enabled                        = local.backup_enabled
+      enabled = local.backup_enabled
       #      location                       = "us"
       point_in_time_recovery_enabled = local.backup_enabled
       start_time                     = "12:00"
@@ -78,8 +78,8 @@ resource "google_compute_global_address" "private_ip_range" {
 }
 
 resource "google_service_networking_connection" "sql_vpc_connection" {
-  network                 = var.vpc
-  service                 = "servicenetworking.googleapis.com"
+  network = var.vpc
+  service = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [
     google_compute_global_address.private_ip_range.name
   ]

@@ -21,8 +21,9 @@ resource "google_storage_default_object_access_control" "public_access" {
   entity = "allUsers"
 }
 
-resource "google_storage_bucket_object" "resume_folder" {
+resource "google_storage_bucket_object" "resume" {
   bucket = google_storage_bucket.default.name
-  name   = "resume/resume.md"
+  name   = "resume/DavidGrahamResume.pdf"
   source = var.resume_path
 }
+
