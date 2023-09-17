@@ -17,3 +17,8 @@ output "resume_http_url" {
   description = "The HTTP URL of the resume object"
   value       = google_storage_bucket_object.resume.media_link
 }
+
+output "bucket_url_map" {
+  description = "The URL map for the bucket, the base path of all objects in the bucket prefixing a glob pattern '/*'"
+  value       = "${local.asset_path_prefix}/*"
+}
