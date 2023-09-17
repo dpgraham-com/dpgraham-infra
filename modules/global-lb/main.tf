@@ -20,6 +20,12 @@ resource "google_compute_region_network_endpoint_group" "client_serverless_neg" 
   }
 }
 
+resource "google_compute_backend_bucket" "static" {
+  name        = "static-asset-backend-bucket"
+  bucket_name = var.bucket_name
+  enable_cdn  = true
+}
+
 resource "google_compute_url_map" "lb-server-client-map" {
   name            = var.name
   default_service = module.lb-http.backend_services["default"].self_link
@@ -38,6 +44,10 @@ resource "google_compute_url_map" "lb-server-client-map" {
         "/api/*"
       ]
       service = module.lb-http.backend_services["server"].self_link
+    }
+    path_rule {
+      paths   = ["/assets/*"]
+      service = google_compute_backend_bucket.static.id
     }
   }
 }
@@ -70,7 +80,7 @@ module "lb-http" {
   backends = {
     default = {
       description = "Cloud backend for directing requests to the react backend"
-      groups = [
+      groups      = [
         {
           group = google_compute_region_network_endpoint_group.client_serverless_neg.id
         }
@@ -86,7 +96,7 @@ module "lb-http" {
     }
     server = {
       description = "Cloud backend for directing to a NEG for the restful API (server)"
-      groups = [
+      groups      = [
         {
           group = google_compute_region_network_endpoint_group.serverless_neg.id
         }
