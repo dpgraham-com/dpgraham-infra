@@ -18,7 +18,7 @@ output "resume_http_url" {
   value       = google_storage_bucket_object.resume.media_link
 }
 
-output "bucket_url_map" {
-  description = "The URL map for the bucket, the base path of all objects in the bucket prefixing a glob pattern '/*'"
-  value       = "${local.asset_path_prefix}/*"
+output "static_content_base_path" {
+  description = "the base path for the static content bucket"
+  value       = local.asset_path_prefix
 }

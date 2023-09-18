@@ -1,3 +1,7 @@
+locals {
+  static_asset_url_path = "/${var.static_base_path}*"
+}
+
 resource "google_compute_region_network_endpoint_group" "serverless_neg" {
   provider              = google-beta
   name                  = "serverless-neg"
@@ -46,7 +50,7 @@ resource "google_compute_url_map" "lb-server-client-map" {
       service = module.lb-http.backend_services["server"].self_link
     }
     path_rule {
-      paths   = ["/assets/*"]
+      paths   = [local.static_asset_url_path]
       service = google_compute_backend_bucket.static.id
     }
   }

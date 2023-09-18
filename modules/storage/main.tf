@@ -1,6 +1,6 @@
 locals {
   versioning        = var.environment == "prod" ? true : false
-  asset_path_prefix = "assets/"
+  asset_path_prefix = "static/"
 }
 
 resource "random_uuid" "storage_uuid" {}

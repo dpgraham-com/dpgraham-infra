@@ -40,6 +40,11 @@ variable "bucket_name" {
   type        = string
 }
 
+variable "static_base_path" {
+  description = "The base path prefix to use for the load balancer URL map"
+  type        = string
+}
+
 variable "region" {
   description = "The region to deploy to"
   type        = string
