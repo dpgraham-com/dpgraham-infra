@@ -163,7 +163,7 @@ module "gh_oidc_dev" {
   pool_id          = var.pool_id
   provider_id      = "github"
   pool_description = "A pool of identities to be used by GitHub Actions workflow runners"
-  sa_mapping       = {
+  sa_mapping = {
     "cloud_run_service_account" = {
       sa_name   = google_service_account.cloud_infra_sa_dev.name
       attribute = "attribute.repository/${var.github_org}/dpgraham-client"
@@ -183,7 +183,7 @@ module "gh_oidc_prod" {
   pool_id          = var.pool_id
   provider_id      = "github"
   pool_description = "A pool of identities to be used by GitHub Actions workflow runners"
-  sa_mapping       = {
+  sa_mapping = {
     "cloud_run_service_account" = {
       sa_name   = google_service_account.cloud_infra_sa_prod.name
       attribute = "attribute.repository/${var.github_org}/dpgraham-client"
