@@ -40,3 +40,9 @@ variable "vpc" {
   description = "The ID of vpc the database is deployed to"
   type        = string
 }
+
+variable "disabled" {
+  description = "Whether the database is disabled"
+  type        = bool
+  default     = false
+}

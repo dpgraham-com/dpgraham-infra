@@ -6,12 +6,13 @@
 
 locals {
   # database tiers follow legacy sets of "db-custom-<VCPUs>-<RAM in MB>"
-  database_tier  = var.environment == "prod" ? "db-custom-1-3840" : "db-f1-micro"
-  disk_size      = var.environment == "prod" ? 10 : 10 # in GB, 10 GB is the minimum
-  availability   = var.environment == "prod" ? "ZONAL" : "ZONAL"
-  instance_name  = var.environment == "prod" ? "${replace(var.name, "_", "-")}-postgres" : "${replace(var.name, "_", "-")}-postgres-dev"
-  ip_range_name  = "${replace(var.name, "_", "-")}-ip-range"
-  backup_enabled = var.environment == "prod" ? true : false
+  database_tier     = var.environment == "prod" ? "db-custom-1-3840" : "db-f1-micro"
+  disk_size         = var.environment == "prod" ? 10 : 10 # in GB, 10 GB is the minimum
+  availability      = var.environment == "prod" ? "ZONAL" : "ZONAL"
+  instance_name     = var.environment == "prod" ? "${replace(var.name, "_", "-")}-postgres" : "${replace(var.name, "_", "-")}-postgres-dev"
+  ip_range_name     = "${replace(var.name, "_", "-")}-ip-range"
+  backup_enabled    = var.environment == "prod" ? true : false
+  activation_policy = var.disabled ? "NEVER" : "ALWAYS"
 }
 
 
@@ -25,7 +26,7 @@ resource "google_sql_database_instance" "default" {
   }
 
   settings {
-    activation_policy = "ALWAYS"
+    activation_policy = local.activation_policy
     availability_type = local.availability
 
     backup_configuration {

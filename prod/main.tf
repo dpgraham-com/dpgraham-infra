@@ -73,17 +73,17 @@ module "server_artifact_repo" {
   depends_on = [module.apis]
 }
 
-module "database" {
-  source      = "../modules/sql" # using local modules until I can these are versioned in the main branch of the repo
-  name        = var.db_name
-  db_password = var.db_password
-  db_username = var.db_username
-  environment = var.environment
-  project_id  = var.project_id
-  vpc         = module.vpc.network
-  #  vpc         = module.vpc.shared_vpc # uncomment if using shared vpc
-  depends_on  = [module.apis]
-}
+#module "database" {
+#  source      = "../modules/sql" # using local modules until I can these are versioned in the main branch of the repo
+#  name        = var.db_name
+#  db_password = var.db_password
+#  db_username = var.db_username
+#  environment = var.environment
+#  project_id  = var.project_id
+#  vpc         = module.vpc.network
+#  disabled    = true
+#  depends_on  = [module.apis]
+#}
 
 module "frontend-service" {
   source         = "../modules/cloud-run"
@@ -112,7 +112,7 @@ module "server-service" {
   vpc            = module.vpc.network
   port           = "8080"
   environment    = var.environment
-  depends_on     = [module.apis, module.database]
+  depends_on     = [module.apis]
   env            = [
     {
       name  = "DB_PORT"
@@ -120,15 +120,15 @@ module "server-service" {
     },
     {
       name  = "DB_NAME"
-      value = module.database.db_name
+      value = "mock"
     },
     {
       name  = "DB_USER"
-      value = module.database.db_user
+      value = "mock"
     },
     {
       name  = "DB_PASSWORD"
-      value = module.database.db_password
+      value = "mock"
     },
     {
       name  = "HOST"
@@ -136,7 +136,7 @@ module "server-service" {
     },
     {
       name  = "DB_HOST"
-      value = module.database.db_host
+      value = "mock"
     }
   ]
 }
