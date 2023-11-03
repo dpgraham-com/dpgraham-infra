@@ -35,7 +35,7 @@ resource "google_project_iam_member" "iam_workload_identity_user" {
 
 module "gh_oidc" {
   source  = "terraform-google-modules/github-actions-runners/google//modules/gh-oidc"
-  version = "3.1.1"
+  version = "3.1.2"
 
   project_id       = var.project_id
   pool_id          = var.pool_id
