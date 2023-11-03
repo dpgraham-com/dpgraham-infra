@@ -3,8 +3,9 @@
 
 provider "registry.terraform.io/hashicorp/google" {
   version     = "4.78.0"
-  constraints = ">= 3.33.0, >= 3.45.0, >= 3.64.0, >= 3.83.0, >= 4.25.0, >= 4.50.0, 4.78.0, < 5.0.0"
+  constraints = ">= 3.33.0, >= 3.64.0, >= 3.83.0, >= 4.25.0, >= 4.50.0, >= 4.64.0, 4.78.0, < 5.0.0, < 6.0.0"
   hashes = [
+    "h1:SGwfLgQ7zDlGeZKn92QUn5zWVhFqO4LvHPTo3VqVq+0=",
     "h1:wxYr3Z7xTg+rugpIu/DKOW88nJ7V76lYvq50+auW5cc=",
     "zh:09a09e79ac404ea9ce2030185973130ed5f25e7f2c1d46093ee67fcc8f94e220",
     "zh:1dd579d1200fd9cb57b84b326f401674cc5c62670c85fff7bb90642fd2379d10",
@@ -23,8 +24,9 @@ provider "registry.terraform.io/hashicorp/google" {
 
 provider "registry.terraform.io/hashicorp/google-beta" {
   version     = "4.79.0"
-  constraints = ">= 3.45.0, >= 3.62.0, >= 3.64.0, >= 4.50.0, < 5.0.0"
+  constraints = ">= 3.64.0, >= 4.50.0, >= 4.64.0, < 5.0.0, < 6.0.0"
   hashes = [
+    "h1:6BtcqUwodzVsI4ww3rP378rTAOP7fiJjRlyDc9T6EDU=",
     "h1:mo4UBn5bPuJAOLH5eYTZEK0R28IBsdx5odJANzIVArU=",
     "zh:207f88e5e4e3263a139a507ee1bdae82e9c79c63ec0eedfd1578948a4c7fa3be",
     "zh:2c0a8dc0756985aa875b6a9e8fff1329475e178806f8bc592f177f382bdeb686",
@@ -45,6 +47,7 @@ provider "registry.terraform.io/hashicorp/random" {
   version     = "3.5.1"
   constraints = ">= 2.1.0"
   hashes = [
+    "h1:VSnd9ZIPyfKHOObuQCaKfnjIHRtR7qTw19Rz8tJxm+k=",
     "h1:sZ7MTSD4FLekNN2wSNFGpM+5slfvpm5A/NLVZiB7CO0=",
     "zh:04e3fbd610cb52c1017d282531364b9c53ef72b6bc533acb2a90671957324a64",
     "zh:119197103301ebaf7efb91df8f0b6e0dd31e6ff943d231af35ee1831c599188d",
@@ -65,6 +68,7 @@ provider "registry.terraform.io/hashicorp/template" {
   version = "2.2.0"
   hashes = [
     "h1:0wlehNaxBX7GJQnPfQwTNvvAf38Jm0Nv7ssKGMaG6Og=",
+    "h1:94qn780bi1qjrbC3uQtjJh3Wkfwd5+tTtJHOb7KTg9w=",
     "zh:01702196f0a0492ec07917db7aaa595843d8f171dc195f4c988d2ffca2a06386",
     "zh:09aae3da826ba3d7df69efeb25d146a1de0d03e951d35019a0f80e4f58c89b53",
     "zh:09ba83c0625b6fe0a954da6fbd0c355ac0b7f07f86c91a2a97849140fea49603",

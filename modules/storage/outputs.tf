@@ -17,3 +17,8 @@ output "resume_http_url" {
   description = "The HTTP URL of the resume object"
   value       = google_storage_bucket_object.resume.media_link
 }
+
+output "static_content_base_path" {
+  description = "the base path for the static content bucket"
+  value       = local.asset_path_prefix
+}

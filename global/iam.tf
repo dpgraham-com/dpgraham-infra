@@ -20,6 +20,13 @@ resource "google_service_account" "cloud_infra_sa_dev" {
   description  = "Service account used by automation to provision cloud resources"
 }
 
+resource "google_service_account" "cloud_infra_sa_prod" {
+  project      = module.dpgraham-com-prod.project_id
+  account_id   = "${var.cloud_infra_sa}-prod"
+  display_name = "Cloud Infra Service Account for prod environment"
+  description  = "Service account used by automation to provision cloud resources"
+}
+
 
 module "developer-folder-nonprod" {
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
@@ -70,6 +77,23 @@ module "service_accounts_nonprod_shared_vpc_connectors" {
   }
 }
 
+module "service_accounts_prod_shared_vpc_connectors" {
+  source   = "terraform-google-modules/iam/google//modules/projects_iam"
+  projects = [module.vpc-prod-shared.project_id]
+  version  = "~> 7.4"
+  bindings = {
+    "roles/compute.networkUser" = [
+      "serviceAccount:service-${module.dpgraham-com-prod.project_number}@gcp-sa-vpcaccess.iam.gserviceaccount.com",
+      "serviceAccount:${module.dpgraham-com-prod.project_number}@cloudservices.gserviceaccount.com",
+      "serviceAccount:${google_service_account.cloud_infra_sa_prod.email}",
+    ]
+  }
+  depends_on = [
+    module.vpc-prod-shared,
+    google_service_account.cloud_infra_sa_prod
+  ]
+}
+
 module "devops-folder-dev" {
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
   version = "~> 7.4"
@@ -109,14 +133,25 @@ module "devops-folder-prod" {
   bindings = {
     "roles/cloudsql.admin" = [
       "group:gcp-devops@${var.primary_domain}",
+      "serviceAccount:${google_service_account.cloud_infra_sa_prod.email}",
     ]
     "roles/editor" = [
       "group:gcp-devops@${var.primary_domain}",
+      "serviceAccount:${google_service_account.cloud_infra_sa_prod.email}",
     ]
     "roles/run.developer" = [
       "group:gcp-devops@${var.primary_domain}",
     ]
+    "roles/compute.networkAdmin" = [
+      "serviceAccount:${google_service_account.cloud_infra_sa_prod.email}",
+    ]
+    "roles/iam.workloadIdentityUser" = [
+      "serviceAccount:${google_service_account.cloud_infra_sa_prod.email}",
+    ]
   }
+  depends_on = [
+    google_service_account.cloud_infra_sa_prod
+  ]
 }
 
 
@@ -129,19 +164,35 @@ module "gh_oidc_dev" {
   provider_id      = "github"
   pool_description = "A pool of identities to be used by GitHub Actions workflow runners"
   sa_mapping = {
-    #    "cloud_run_service_account" = {
-    #      sa_name   = google_service_account.cloud_run_sa.name
-    #      attribute = "attribute.repository/${var.github_org}/dpgraham-client"
-    #    }
+    "cloud_run_service_account" = {
+      sa_name   = google_service_account.cloud_infra_sa_dev.name
+      attribute = "attribute.repository/${var.github_org}/dpgraham-client"
+    }
     "infra_editor_service_account" = {
       sa_name   = google_service_account.cloud_infra_sa_dev.name
       attribute = "attribute.repository/${var.github_org}/dpgraham-infra"
     }
   }
-  #  depends_on = [
-  #    google_service_account.cloud_infra_sa_dev
-  #    data.google_service_account.cloud_infra_sa,
-  #  ]
+}
+
+module "gh_oidc_prod" {
+  source  = "terraform-google-modules/github-actions-runners/google//modules/gh-oidc"
+  version = "3.1.1"
+
+  project_id       = module.dpgraham-com-prod.project_id
+  pool_id          = var.pool_id
+  provider_id      = "github"
+  pool_description = "A pool of identities to be used by GitHub Actions workflow runners"
+  sa_mapping = {
+    "cloud_run_service_account" = {
+      sa_name   = google_service_account.cloud_infra_sa_prod.name
+      attribute = "attribute.repository/${var.github_org}/dpgraham-client"
+    }
+    "infra_editor_service_account" = {
+      sa_name   = google_service_account.cloud_infra_sa_prod.name
+      attribute = "attribute.repository/${var.github_org}/dpgraham-infra"
+    }
+  }
 }
 
 

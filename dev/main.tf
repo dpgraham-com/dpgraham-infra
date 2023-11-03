@@ -30,7 +30,10 @@ module "apis" {
     "sqladmin.googleapis.com",
     "artifactregistry.googleapis.com",
     "run.googleapis.com",
-    "vpcaccess.googleapis.com"
+    "vpcaccess.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "serviceusage.googleapis.com",
+    "iam.googleapis.com"
   ]
 }
 
@@ -151,4 +154,6 @@ module "load_balancer" {
   environment      = var.environment
   project_id       = var.project_id
   domain_name      = var.domain
+  bucket_name      = module.storage.storage_bucket_name
+  static_base_path = module.storage.static_content_base_path
 }

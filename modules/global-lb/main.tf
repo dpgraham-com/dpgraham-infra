@@ -1,3 +1,7 @@
+locals {
+  static_asset_url_path = "/${var.static_base_path}*"
+}
+
 resource "google_compute_region_network_endpoint_group" "serverless_neg" {
   provider              = google-beta
   name                  = "serverless-neg"
@@ -20,6 +24,12 @@ resource "google_compute_region_network_endpoint_group" "client_serverless_neg" 
   }
 }
 
+resource "google_compute_backend_bucket" "static" {
+  name        = "static-asset-backend-bucket"
+  bucket_name = var.bucket_name
+  enable_cdn  = true
+}
+
 resource "google_compute_url_map" "lb-server-client-map" {
   name            = var.name
   default_service = module.lb-http.backend_services["default"].self_link
@@ -38,6 +48,10 @@ resource "google_compute_url_map" "lb-server-client-map" {
         "/api/*"
       ]
       service = module.lb-http.backend_services["server"].self_link
+    }
+    path_rule {
+      paths   = [local.static_asset_url_path]
+      service = google_compute_backend_bucket.static.id
     }
   }
 }

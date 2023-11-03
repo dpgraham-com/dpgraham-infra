@@ -35,6 +35,16 @@ variable "frontend_service" {
   type        = string
 }
 
+variable "bucket_name" {
+  description = "The name of the bucket to store the static assets"
+  type        = string
+}
+
+variable "static_base_path" {
+  description = "The base path prefix to use for the load balancer URL map"
+  type        = string
+}
+
 variable "region" {
   description = "The region to deploy to"
   type        = string
